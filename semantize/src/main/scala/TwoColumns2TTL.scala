@@ -17,6 +17,7 @@ object TwoColumns2TTL extends App {
   @prefix dc: <http://purl.org/dc/elements/1.1/>.
   @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
 """
+val dbpediaFR = "http://fr.dbpedia.org/resource"
 
   val map = Map(
     """^\*Fiche mise à jour le (.*)\*""" -> """ dc:date "$1" ;""",
@@ -26,11 +27,16 @@ object TwoColumns2TTL extends App {
     "^  Numéro SIRET +(.*)" -> """ cob:siren "$1" ;""",
     "^  Numéro d’immatriculation +(.*)" -> """ oxi:id "$1" ;""",
     "^  Date d’inscription +(.*)" -> """ oxi:join-date "$1" ;""", // 31/01/2012
-    
-    "^  Statut +PERSONNE MORALE" -> """ oxi:status <http://fr.dbpedia.org/resource/Personne_morale> ;""", //        
-    // 
-    
-    "^  (SARL.*)" -> """ oxi:legal-form "$1" ;""",
+ 
+    "^  Statut +PERSONNE MORALE" -> s""" oxi:status <$dbpediaFR/Personne_morale> ;""",
+    "^  Statut +PERSONNE PHYSIQUE" -> s""" oxi:status <$dbpediaFR/Personne__physique> ;""",
+
+    "^  (SARL.*)" -> s""" oxi:legal-form <$dbpediaFR/SARL> ;""",
+    "^  (SAS.*)" -> s""" oxi:legal-form <$dbpediaFR/SAS> ;""",
+    "^  (EURL.*)" -> s""" oxi:legal-form <$dbpediaFR/EURL> ;""",
+    "^  (SA.*)" -> s""" oxi:legal-form <$dbpediaFR/SA> ;""",
+    "^  (Autre.*)" -> s""" oxi:legal-form oxi:other ;""",
+
     """^  \*\*Représentant principal\*\*""" -> """ oxi:manager ""\"""",
     """^  \*\*Autre\(s\) représentant\(s\)\*\*""" -> """""\" ;
        oxi:representative ""\"
