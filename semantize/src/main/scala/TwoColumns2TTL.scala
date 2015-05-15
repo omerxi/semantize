@@ -25,9 +25,13 @@ trait TwoColumns2TTL extends Utils {
 
   val outputFile = "output.ttl"
 
+  val linesBlockBeginnings = Seq(
+      "Représentant principal",
+      """Autre\(s\) représentant\(s\)""" )
+
   val commonMap = Map(
 		".*wicket:bookmarkablePage.*" -> "",
-    "^  -----.*"  -> "",
+    "^  ----.*"  -> "",
 
     """^\*Fiche mise à jour le (.*)\*""" -> """ dc:date "$1" ;""",
 
@@ -45,28 +49,28 @@ trait TwoColumns2TTL extends Utils {
     "^  (SA.*)" -> s""" oxi:legal-form <$dbpediaFR/SA> ;""",
     "^  (AUTRE.*)" -> s""" oxi:legal-form oxi:other ;""",
  
+    "^  Adresse +(.*)" -> """ vcard:street-address ""\" $1 ""\" ;""",
     "^  Code Postal +(.*)" -> """ vcard:postal-code "$1" ;""",
     "^  Ville +(.*)" -> """ vcard:locality "$1" ;""",
-    "^  Pays +(.*)" -> """ vcard:country-name  "$1" """)
-
+    "^  Pays +(.*)" -> """ vcard:country-name  "$1" ;""",
+    "^  Téléphone +(.*)" -> """ foaf:phone  "$1" """
+  )
+   
   val companyMap = Map(
     "^  Dénomination +(.*)" -> """ foaf:name "$1" ;""",
     "^  Sigle +(.*)" -> """ oxi:initials "$1" ;""",
-    """^  \*\*Représentant principal\*\*""" -> """ oxi:manager ""\"""",
-    """^  \*\*Autre\(s\) représentant\(s\)\*\*""" -> """""\" ;
-       oxi:representative ""\"
-       """,
-    "Aucun autre représentant enregistré." -> "",
-          "^  Adresse +(.*)" -> """""\" ;
-       vcard:street-address "$1" ;"""
+    """^  \*\*""" + linesBlockBeginnings(0) + """\*\*""" -> """ oxi:manager ""\"""",
+    """^  \*\*""" + linesBlockBeginnings(1) + """\*\*""" -> """ oxi:representative ""\"""",
+    " *Aucun autre représentant enregistré." -> ""
    )
        
   val personMap = Map(
 		  "^  Nom +(.*)" -> """ foaf:lastName "$1" ;""",
-		  "^  Prénom +(.*)" -> """ foaf:firstName "$1" ;""",
-		  "^  Adresse +(.*)" -> """ vcard:street-address "$1" ;"""
+		  "^  Prénom +(.*)" -> """ foaf:firstName "$1" ;"""
   )
-
+  
+  // end of configuration
+  
   var fileCount = 0
 
   def process1File(file: File) {
@@ -75,6 +79,10 @@ trait TwoColumns2TTL extends Utils {
       val PERSONNE_PHYSIQUE = lines.exists { _ contains("PERSONNE PHYSIQUE") }
       println( "# " + file + " ; " + lines.size + " lines." )
       println(s"_:dr$fileCount")
+      var precedingTriple = ""
+      var lineblockOpened = false
+      var lineNumber = 1
+      var lineblockLineNumber = 0
       for (line <- lines) {
         var triple = line
         for (m <- commonMap) {
@@ -87,7 +95,16 @@ trait TwoColumns2TTL extends Utils {
         else
           for (m <- companyMap) {
             triple = triple.replaceFirst(m._1, m._2)
-          }
+          }        
+        // hack for closing oxi:representative: manage 2 lines Block
+//        log(s"line $line" )
+        lineblockOpened = linesBlockBeginnings.exists { begining => line matches (".*" + begining + ".*" ) }
+        val closeBlock = lineNumber == lineblockLineNumber + 2 && lineNumber != 2
+//        log(s"lineblockOpened $lineblockOpened lineNumber $lineNumber lineblockLineNumber $lineblockLineNumber closeBlock $closeBlock")
+        if( closeBlock ) {println( " \"\"\" ;" ); lineblockLineNumber=0 }
+        if(lineblockOpened) lineblockLineNumber = lineNumber
+        lineNumber = lineNumber + 1
+
         println(triple)
       }
       println(".")
