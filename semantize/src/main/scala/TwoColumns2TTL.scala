@@ -35,7 +35,7 @@ trait TwoColumns2TTL extends Utils {
 
     """^\*Fiche mise à jour le (.*)\*""" -> """ dc:date "$1" ;""",
 
-    "^  Marque / Nom commercial +(.*)" -> """ oxi:brand ""\"$1""\" ;""",
+    "^  Marque / Nom commercial +(.*)" -> """ oxi:brand ""\" $1 ""\" ;""",
     "^  Numéro SIRET +(.*)" -> """ cob:siren "$1" ;""",
     "^  Numéro d’immatriculation +(.*)" -> """ oxi:id "$1" ;""",
     "^  Date d’inscription +(.*)" -> """ oxi:join-date "$1" ;""", // 31/01/2012
@@ -53,11 +53,10 @@ trait TwoColumns2TTL extends Utils {
     "^  Code Postal +(.*)" -> """ vcard:postal-code "$1" ;""",
     "^  Ville +(.*)" -> """ vcard:locality "$1" ;""",
     "^  Pays +(.*)" -> """ vcard:country-name  "$1" ;""",
-    "^  Téléphone +(.*)" -> """ foaf:phone  "$1" """
-  )
+    "^  Téléphone +(.*)" -> """ foaf:phone  "$1" """)
 
   val companyMap = Map(
-    "^  Dénomination +(.*)" -> """ foaf:name "$1" ;""",
+    "^  Dénomination +(.*)" -> """ foaf:name ""\" $1 ""\" ;""",
     "^  Sigle +(.*)" -> """ oxi:initials "$1" ;""",
     """^  \*\*""" + linesBlockBeginnings(0) + """\*\*""" -> """ oxi:manager ""\"""",
     """^  \*\*""" + linesBlockBeginnings(1) + """\*\*""" -> """ oxi:representative ""\"""",
@@ -79,44 +78,51 @@ trait TwoColumns2TTL extends Utils {
   }
 
   def processLines(lines: Seq[String], file: File) = {
-    val PERSONNE_PHYSIQUE = lines.exists { _ contains ("PERSONNE PHYSIQUE") }
-    println("# " + file + " ; " + lines.size + " lines.")
-    println(s"_:dr$fileCount")
-    var precedingTriple = ""
-    var lineblockOpened = false
-    var lineNumber = 1
-    var lineblockLineNumber = 0
-    for (line <- lines) {
-      var triple = line
-      for (m <- commonMap) {
-        triple = triple.replaceFirst(m._1, m._2)
-      }
-      if (PERSONNE_PHYSIQUE)
-        for (m <- personMap) {
+    if ( ! lines.isEmpty) {
+      val PERSONNE_PHYSIQUE = lines.exists { _ contains ("PERSONNE PHYSIQUE") }
+      println("# " + file + " ; " + lines.size + " lines.")
+      println(s"_:dr$fileCount")
+      var precedingTriple = ""
+      var lineblockOpened = false
+      var lineNumber = 1
+      var lineblockLineNumber = 0
+      for (line <- lines) {
+        var triple = line
+        for (m <- commonMap) {
           triple = triple.replaceFirst(m._1, m._2)
         }
-      else
-        for (m <- companyMap) {
-          triple = triple.replaceFirst(m._1, m._2)
-        }
-      // hack for closing oxi:representative: manage 2 lines Block
-      //        log(s"line $line" )
-      lineblockOpened = linesBlockBeginnings.exists { begining => line matches (".*" + begining + ".*") }
-      val closeBlock = lineNumber == lineblockLineNumber + 2 && lineNumber != 2
-      //        log(s"lineblockOpened $lineblockOpened lineNumber $lineNumber lineblockLineNumber $lineblockLineNumber closeBlock $closeBlock")
-      if (closeBlock) { println(" \"\"\" ;"); lineblockLineNumber = 0 }
-      if (lineblockOpened) lineblockLineNumber = lineNumber
-      lineNumber = lineNumber + 1
+        if (PERSONNE_PHYSIQUE)
+          for (m <- personMap) {
+            triple = triple.replaceFirst(m._1, m._2)
+          }
+        else
+          for (m <- companyMap) {
+            triple = triple.replaceFirst(m._1, m._2)
+          }
+        // closing oxi:representative: manage lines Block
+        //      log(s"line $line" )
+        lineblockOpened = linesBlockBeginnings.exists { begining => line matches (".*" + begining + ".*") }
+        val lineIsSeparator = line.startsWith("  -----------------------") ||
+          line.matches(".*" + linesBlockBeginnings(1) + ".*")
+        val closeBlock = lineblockLineNumber > 1 &&
+          //        lineNumber >= lineblockLineNumber + 2 && lineNumber != 2
+          lineIsSeparator
+        //      log(s"lineblockOpened $lineblockOpened lineNumber $lineNumber lineblockLineNumber $lineblockLineNumber closeBlock $closeBlock")
+        if (closeBlock) { println(" \"\"\" ;"); lineblockLineNumber = 0 }
+        if (lineblockOpened) lineblockLineNumber = lineNumber
+        lineNumber = lineNumber + 1
 
-      println(triple)
+        println(triple)
+      }
+      println("."); pr.flush()
+      fileCount = fileCount + 1
     }
-    println("."); pr.flush()
-    fileCount = fileCount + 1
   }
 
   val pr = new java.io.PrintWriter(outputFile)
-  /*override*/ def println(s: String) = {
-    if (s != "") pr.println(s)
+  /** print non empty string on output File, removing \ at end of line */
+  def println(s: String) = {
+    if (s != "") pr.println(s.replaceFirst("""\\$""", ""))
   }
 
   def closeOutput() = pr.close(); log("Closed " + outputFile)

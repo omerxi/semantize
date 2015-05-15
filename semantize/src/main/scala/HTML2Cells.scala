@@ -14,14 +14,14 @@ trait HTML2Cells extends Utils {
       val usr = "/usr/bin"
       val command1 = s"""$usr/pandoc -f html -t markdown $htmlFile -o $htmlFile.md"""
       val ret0 = runCommand(command1)
-      println(s"$htmlFile : return $ret0")
+      println(s"$htmlFile : pandoc return $ret0")
 
      import scala.sys.process._
      val ret =
         Seq("egrep", "^  |Fiche mise à jour le ", htmlFile+".md" ) #>
         new File(s"$htmlFile.txt") !
 
-      println(s"$htmlFile : return $ret")
+      println(s"$htmlFile : egrep return $ret")
       new File(s"$htmlFile.txt")
     } else new File("/tmp/null")
   }
