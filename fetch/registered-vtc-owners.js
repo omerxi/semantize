@@ -14,7 +14,7 @@ var args = process.argv.slice(2);
 //#############################################################################
 // TODO default to "tmp/"
 // TODO handle trailing slashes
-var outputPath = '/media/usb0/registered-vtc-files/';
+var outputPath = 'registered-vtc-files/';
 mkdirp(outputPath, function(err) {
   if (err) console.error(err);
   else console.log("will write files to " + outputPath);
