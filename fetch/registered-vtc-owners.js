@@ -214,7 +214,9 @@ var getNextRow = function(i, offset, total, dateRange) {
   then(onNextRow(i, offset, total, dateRange), onNoNextRow(i, offset, total, dateRange));
 };
 //#############################################################################
-var driver = new webdriver.Builder().withCapabilities(webdriver.Capabilities.chrome()).build();
+var chrome = require('selenium-webdriver/chrome');
+var service = new chrome.ServiceBuilder(__dirname + '/node_modules/.bin/chromedriver').build();
+var driver = new chrome.createDriver(webdriver.Capabilities.chrome(), service);
 //#############################################################################
 driver.get(seedUrl);
 driver.wait(until.titleContains("Recherche"), 3000).then(
