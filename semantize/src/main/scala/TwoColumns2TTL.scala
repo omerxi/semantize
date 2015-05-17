@@ -122,7 +122,9 @@ trait TwoColumns2TTL extends Utils {
   val pr = new java.io.PrintWriter(outputFile)
   /** print non empty string on output File, removing \ at end of line */
   def println(s: String) = {
-    if (s != "") pr.println(s.replaceFirst("""\\$""", ""))
+    if (s != "") pr.println(
+        s.replaceFirst("""\\$""", "") .
+          replaceAll( """\\_""", "_" ) ) 
   }
 
   def closeOutput() = pr.close(); log("Closed " + outputFile)
