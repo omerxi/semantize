@@ -17,7 +17,7 @@ trait TwoColumns2TTL extends Utils {
   val prefixes = """
   @prefix foaf: <http://xmlns.com/foaf/0.1/>.
   @prefix cob:  <http://cobusiness.fr/ontologies/barter.owl.n3#>.
-  @prefix oxi:  <http://omerxi.co/ontologies/core.owl.ttl#> .
+  @prefix oxi:  <http://omerxi.com/ontologies/core.owl.ttl#> .
   @prefix dc: <http://purl.org/dc/elements/1.1/>.
   @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
 """
@@ -81,7 +81,7 @@ trait TwoColumns2TTL extends Utils {
     if ( ! lines.isEmpty) {
       val PERSONNE_PHYSIQUE = lines.exists { _ contains ("PERSONNE PHYSIQUE") }
       println("# " + file + " ; " + lines.size + " lines.")
-      println(s"_:dr$fileCount")
+      println(s"_:driver$fileCount a oxi:Ride-hailing-driver ;")
       var precedingTriple = ""
       var lineblockOpened = false
       var lineNumber = 1

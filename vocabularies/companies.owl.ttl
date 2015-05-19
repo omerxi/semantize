@@ -1,0 +1,77 @@
+@prefix :      <http://omerxi.co/ontologies/core.owl.ttl#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix app:   <http://jmvanel.free.fr/ontology/software_applications.owl#> .
+@prefix e:     <http://eulersharp.sourceforge.net/2003/03swap/log-rules#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix list:  <http://www.w3.org/2000/10/swap/list#> .
+@prefix vs:    <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix log:   <http://www.w3.org/2000/10/swap/log#> .
+@prefix grddl: <http://www.w3.org/2003/g/data-view#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix ns2:   <http://www.w3.org/1999/xhtml/vocab#> .
+@prefix ns1:   <http://www.w3.org/1999/xhtml/vocab#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix wot:   <http://xmlns.com/wot/0.1/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix cob:   <http://cobusiness.fr/ontologies/barter.owl.n3#> .
+@prefix fn:    <http://www.w3.org/2005/xpath-functions#> .
+@prefix oxi:   <http://omerxi.com/ontologies/core.owl.ttl#> .
+
+oxi:Ride-hailing-driver a owl:Class ;
+        rdfs:label    "conducteur VTC"@fr , "Ride-hailing driver"@en ;
+	rdfs:subclassOf foaf:Agent .
+	
+oxi:brand  a          owl:DatatypeProperty ;
+        rdfs:domain   foaf:Agent ;
+        rdfs:label    "brand"@en , "Marque / Nom commercial"@fr .
+
+oxi:manager  a        owl:DatatypeProperty ;
+        rdfs:domain   foaf:Agent ;
+        rdfs:label    "manager"@en , "Gérant, Représentant principal"@fr ;
+         .
+
+oxi:representative  a  owl:DatatypeProperty ;
+        rdfs:domain   foaf:Agent ;
+        rdfs:label    "representative"@en , "Représentant légal/statutaire"@fr ;
+         .
+
+oxi:initials  a       owl:DatatypeProperty ;
+        rdfs:domain   foaf:Agent ;
+        rdfs:label    "initials"@en , "Sigle"@fr ;
+         .
+
+
+oxi:id  a             owl:DatatypeProperty ;
+        rdfs:domain   foaf:Agent ;
+        rdfs:label    "id"@en , "identifiant unique"@fr ;
+        rdfs:comment  "identifiant unique provenant de la source de données"@fr ;
+        .
+
+oxi:status  a         owl:ObjectProperty ;
+        rdfs:comment  "one of <http://fr.dbpedia.org/resource/Personne_morale> or <http://fr.dbpedia.org/resource/Personne_physique>"@en ,
+        "un parmi <http://fr.dbpedia.org/resource/Personne_morale> et <http://fr.dbpedia.org/resource/Personne_physique>"@fr ;
+        rdfs:domain   foaf:Agent ;
+        rdfs:label    "status"@en , "Statut"@fr ;
+         .
+
+oxi:legal-form  a     owl:ObjectProperty ;
+        rdfs:domain   foaf:Agent ;
+        rdfs:label    "legal-form"@en , "Forme juridique"@fr ;
+        rdfs:comment  
+        """un parmi <http://fr.dbpedia.org/resource/SARL> , <http://fr.dbpedia.org/resource/SAS> , 
+	<http://fr.dbpedia.org/resource/EURL>"""@fr ;
+         .
+
+cob:siren  a          owl:DatatypeProperty ;
+        rdfs:comment  "official company Id"@en , "siren (Siret)"@fr ;
+        rdfs:domain   foaf:Agent ;
+        rdfs:label    "siren"@en , "siren"@fr ;
+         .
+
+oxi:join-date  a      owl:DatatypeProperty ;
+        rdfs:domain   foaf:Agent ;
+        rdfs:label    "join date"@en , "Date d’inscription"@fr ;
+         .
+
