@@ -31,9 +31,21 @@ var save = function(file) {
 //#############################################################################
 var parseHtmlFile = function(html) {
   var json = {};
+
+  console.log(html);
+
   var doc = new dom().parseFromString(html);
+
   var nodes = xpath.select("//b[text()='Représentant principal']/following-sibling::div", doc);
-  json.name = nodes[0].firstChild.data.match("(.+), .+")[1];
+
+  if (nodes.length === 0) {
+    var prenom = xpath.select("//td[text()='Nom']/following-sibling::td/div", doc)[0].firstChild.data;
+    var nom = xpath.select("//td[text()='Prénom']/following-sibling::td/div", doc)[0].firstChild.data;
+    json.name = prenom + " " + nom;
+  } else {
+    json.name = nodes[0].firstChild.data.match("(.+), .+")[1];
+  }
+
   var nodes2 = xpath.select("//td[text()='Code Postal']/following-sibling::td/div", doc);
   json.postalCode = nodes2[0].firstChild.data;
   var nodes3 = xpath.select("//td[text()='Ville']/following-sibling::td/div", doc);
@@ -100,6 +112,7 @@ var processPage = function(vtc, callback) {
           var data = "";
           acc.map(function(entry) {
             if (data !== "") data += ",\n";
+            entry["@context"] = "http://omerxi.com/ontologies/context_phone.jsonld";
             data += JSON.stringify(entry, null, 2);
           });
           var file = {
@@ -115,34 +128,47 @@ var processPage = function(vtc, callback) {
   });
 };
 //#############################################################################
-var search = function() {
+var readFile = function(fileName, callback) {
+  fs.readFile(inputPath + fileName, "utf8", function(err, content) {
+    var vtc = parseHtmlFile(content);
+    console.log(colors.yellow(JSON.stringify(vtc, null, 2)));
+    callback(vtc);
+  });
+};
+//#############################################################################
+var iterateOnVtcFiles = function() {
   fs.readdir(inputPath, function function_name(err, files) {
-    var n = files.length;
-    for (var i = 0; i < 1; ++i) {
-      var fileName = files[i];
-      fs.readFile(inputPath + fileName, "utf8", function(err, content) {
-        var vtc = parseHtmlFile(content);
-        console.log(colors.yellow(JSON.stringify(vtc, null, 2)));
-        driver.wait(until.elementLocated(By.name("nom")), 3000);
-        driver.findElement(By.name("nom")).then(function(element) {
-          //element.sendKeys(name);
-          element.sendKeys("Bénichou");
-        });
-        driver.findElement(By.name("ou")).then(function(element) {
-          //element.sendKeys(postalCode + " " + city);
-          element.sendKeys("75015" + " " + "Paris");
-        });
-        driver.findElement(By.xpath("//button[contains(@title,'Trouver')]")).click();
-        driver.wait(until.elementLocated(By.xpath("//a[text()='Afficher le n°']")), 10000);
-        processPage(vtc, function () {
-          console.log("one page done !");
-        });
-      });
+    for (var i = 0, n = files.length; i < n; ++i) {
+      readFile(files[i], search);
+      break;
     }
   });
 };
 //#############################################################################
-
+var search = function(vtc) {
+  console.log(vtc);
+  driver.wait(until.elementLocated(By.name("nom")), 3000);
+  driver.findElement(By.name("nom")).then(function(element) {
+    element.sendKeys(vtc.name);
+    //element.sendKeys("Bénichou");
+  });
+  driver.findElement(By.name("ou")).then(function(element) {
+    element.sendKeys(vtc.postalCode + " " + vtc.city);
+    //element.sendKeys("75015" + " " + "Paris");
+  });
+  driver.findElement(By.xpath("//button[contains(@title,'Trouver')]")).click();
+  driver.wait(until.elementLocated(By.xpath("//a[text()='Afficher le n°']")), 10000);
+  processPage(vtc, function() {
+    console.log("one page done !");
+    driver.findElement(By.xpath("//span[text()='Page suivante']/parent::a")).then(function(element) {
+      console.log("at least one more page");
+    }, function(error) {
+      if (error.name !== "NoSuchElementError") return console.log("unexpected error !");
+      console.log("no more pages");
+    });
+  });
+};
+//#############################################################################
 /*
 var service = new chrome.ServiceBuilder(__dirname + '/node_modules/.bin/chromedriver').build();
 var chromeCapabilities = webdriver.Capabilities.chrome();
@@ -191,5 +217,5 @@ driver.findElement(By.id('popinRetourVintage')).then(function(element) {
     console.log("aborting on beta version site");
   });
 }, function(error) {
-  search();
+  iterateOnVtcFiles();
 });
