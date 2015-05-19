@@ -1,4 +1,5 @@
-@prefix :      <http://omerxi.co/ontologies/core.owl.ttl#> .
+@prefix :      <http://omerxi.com/ontologies/core.owl.ttl#> .
+@prefix oxi:   <http://omerxi.com/ontologies/core.owl.ttl#> .
 @prefix dc:    <http://purl.org/dc/elements/1.1/> .
 @prefix app:   <http://jmvanel.free.fr/ontology/software_applications.owl#> .
 @prefix e:     <http://eulersharp.sourceforge.net/2003/03swap/log-rules#> .
@@ -17,7 +18,6 @@
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix cob:   <http://cobusiness.fr/ontologies/barter.owl.n3#> .
 @prefix fn:    <http://www.w3.org/2005/xpath-functions#> .
-@prefix oxi:   <http://omerxi.com/ontologies/core.owl.ttl#> .
 
 oxi:Ride-hailing-driver a owl:Class ;
         rdfs:label    "conducteur VTC"@fr , "Ride-hailing driver"@en ;

@@ -1,0 +1,13 @@
+{"@context": {
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "vcard": "http://www.w3.org/2006/vcard/ns#",
+    "sioc": "http://rdfs.org/sioc/ns#",
+    "sioct": "http://rdfs.org/sioc/types#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "doap": "http://usefulinc.com/ns/doap#",
+
+    "name": "foaf:name",
+    "address": "vcard:street-address",
+    "phones":  "foaf:phone"
+  }
+}
