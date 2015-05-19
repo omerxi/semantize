@@ -1,3 +1,5 @@
+//#############################################################################
+// TODO handle results on several pages
 // TODO new site and old site navigation
 //#############################################################################
 var colors = require('colors/safe');
@@ -31,13 +33,9 @@ var save = function(file) {
 //#############################################################################
 var parseHtmlFile = function(html) {
   var json = {};
-
   console.log(html);
-
   var doc = new dom().parseFromString(html);
-
   var nodes = xpath.select("//b[text()='Représentant principal']/following-sibling::div", doc);
-
   if (nodes.length === 0) {
     var prenom = xpath.select("//td[text()='Nom']/following-sibling::td/div", doc)[0].firstChild.data;
     var nom = xpath.select("//td[text()='Prénom']/following-sibling::td/div", doc)[0].firstChild.data;
@@ -45,7 +43,6 @@ var parseHtmlFile = function(html) {
   } else {
     json.name = nodes[0].firstChild.data.match("(.+), .+")[1];
   }
-
   var nodes2 = xpath.select("//td[text()='Code Postal']/following-sibling::td/div", doc);
   json.postalCode = nodes2[0].firstChild.data;
   var nodes3 = xpath.select("//td[text()='Ville']/following-sibling::td/div", doc);
@@ -150,11 +147,9 @@ var search = function(vtc) {
   driver.wait(until.elementLocated(By.name("nom")), 3000);
   driver.findElement(By.name("nom")).then(function(element) {
     element.sendKeys(vtc.name);
-    //element.sendKeys("Bénichou");
   });
   driver.findElement(By.name("ou")).then(function(element) {
     element.sendKeys(vtc.postalCode + " " + vtc.city);
-    //element.sendKeys("75015" + " " + "Paris");
   });
   driver.findElement(By.xpath("//button[contains(@title,'Trouver')]")).click();
   driver.wait(until.elementLocated(By.xpath("//a[text()='Afficher le n°']")), 10000);
@@ -169,49 +164,13 @@ var search = function(vtc) {
   });
 };
 //#############################################################################
-/*
-var service = new chrome.ServiceBuilder(__dirname + '/node_modules/.bin/chromedriver').build();
 var chromeCapabilities = webdriver.Capabilities.chrome();
 var chromeOptions = {
-  'args': [
-    '--proxy-server="localhost:8118"',
-    '--start-maximized',
-    //'--proxy-server="socks5://localhost:8118"',
-    //'--host-resolver-rules="MAP * 0.0.0.0 , EXCLUDE localhost"'
-  ]
-};
-*/
-//chromeCapabilities.set('chromeOptions', chromeOptions);
-//var driver = new chrome.createDriver(webdriver.Capabilities.chrome(), service);
-//var driver = new chrome.createDriver(chromeCapabilities, service);
-//var driver = new webdriver.Builder().withCapabilities(chromeCapabilities).build();
-
-
-
-var chromeCapabilities = webdriver.Capabilities.chrome();
-var chromeOptions = {
-  'args': [
-    '--start-maximized',
-  ]
+  'args': ['--start-maximized']
 };
 chromeCapabilities.set('chromeOptions', chromeOptions);
-
-var driver = new webdriver.Builder()
-  //.withCapabilities(webdriver.Capabilities.chrome())
-  .withCapabilities(chromeCapabilities)
-  /*
-  .setProxy(proxy.manual({
-    http: 'localhost:8118',
-    https: 'localhost:8118'
-  }))
-  */
-  .build();
-
-
+var driver = new webdriver.Builder().withCapabilities(chromeCapabilities).build();
 driver.get(seedUrl);
-//driver.get("https://check.torproject.org/");
-//driver.wait(until.elementLocated(By.xpath('//*[@id="popinRetourVintage"]/div[2]/div/a[@title="Fermer"]')), 3000);
-
 driver.findElement(By.id('popinRetourVintage')).then(function(element) {
   driver.wait(until.elementLocated(By.xpath('//*[@id="popinRetourVintage"]/div[2]/div/a[@title="Fermer"]')), 3000).then(function(element) {
     console.log("aborting on beta version site");
@@ -219,3 +178,4 @@ driver.findElement(By.id('popinRetourVintage')).then(function(element) {
 }, function(error) {
   iterateOnVtcFiles();
 });
+//#############################################################################
