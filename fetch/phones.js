@@ -2,6 +2,7 @@
 // TODO handle results on several pages
 // TODO new site and old site navigation
 //#############################################################################
+var mkdirp = require('mkdirp');
 var colors = require('colors/safe');
 var fs = require("fs");
 var webdriver = require("selenium-webdriver");
@@ -10,18 +11,23 @@ var chrome = require('selenium-webdriver/chrome');
 var By = require("selenium-webdriver").By;
 var until = require("selenium-webdriver").until;
 var xpath = require('xpath');
-var dom = require('xmldom').DOMParser;
+var DOMParser = require('xmldom').DOMParser;
 //#############################################################################
 var args = process.argv.slice(2);
 //#############################################################################
 var inputPath = args[0];
 //#############################################################################
 var seedUrl = args[1];
-console.log(colors.blue(seedUrl));
+//#############################################################################
+var outputPath = args[2];
+mkdirp(outputPath, function(err) {
+  if (err) console.error(err);
+  else console.log("will write files to " + outputPath);
+});
 //#############################################################################
 var save = function(file) {
   fs.exists(file.path, function(exists) {
-    fs.writeFile(file.path, file.content, function(error) {
+    fs.appendFile(file.path, file.content, function(error) {
       if (error) console.error(colors.red("\n" + "Write error on : " + file.path + "\n" + error.message + "\n" + "content:\n" + file.content));
       else {
         console.log(colors.green(" -> " + file.path));
@@ -33,8 +39,15 @@ var save = function(file) {
 //#############################################################################
 var parseHtmlFile = function(html) {
   var json = {};
-  console.log(html);
-  var doc = new dom().parseFromString(html);
+  var doc = new DOMParser({
+    locator: {},
+    errorHandler: {
+      warning: function(w) {
+        console.warn(w);
+        console.log(colors.red(html));
+      }
+    }
+  }).parseFromString(html);
   var nodes = xpath.select("//b[text()='Représentant principal']/following-sibling::div", doc);
   if (nodes.length === 0) {
     var prenom = xpath.select("//td[text()='Nom']/following-sibling::td/div", doc)[0].firstChild.data;
@@ -113,7 +126,7 @@ var processPage = function(vtc, callback) {
             data += JSON.stringify(entry, null, 2);
           });
           var file = {
-            path: "/tmp/" + vtc.id + ".json",
+            path: outputPath + vtc.id + ".json",
             content: "[" + data + "]"
           };
           save(file);
@@ -125,43 +138,62 @@ var processPage = function(vtc, callback) {
   });
 };
 //#############################################################################
-var readFile = function(fileName, callback) {
-  fs.readFile(inputPath + fileName, "utf8", function(err, content) {
-    var vtc = parseHtmlFile(content);
-    console.log(colors.yellow(JSON.stringify(vtc, null, 2)));
-    callback(vtc);
+var readFile = function(i, file, callback) {
+  fs.readFile(file, "utf8", function(err, content) {
+    callback(i, content);
   });
 };
 //#############################################################################
-var iterateOnVtcFiles = function() {
+var iterateOnVtcFiles = function(callback) {
   fs.readdir(inputPath, function function_name(err, files) {
-    for (var i = 0, n = files.length; i < n; ++i) {
-      readFile(files[i], search);
-      break;
+    var vtcs = [];
+    for (var i = 0, n = 5 /*files.length*/ ; i < n; ++i) {
+      readFile(i, inputPath + files[i], function(i, content) {
+        console.log(i);
+        console.log(files[i]);
+        vtcs.push(parseHtmlFile(content));
+        if (i + 1 === n) callback(vtcs);
+      });
     }
   });
 };
 //#############################################################################
-var search = function(vtc) {
+var search = function(vtc, callback) {
   console.log(vtc);
   driver.wait(until.elementLocated(By.name("nom")), 3000);
   driver.findElement(By.name("nom")).then(function(element) {
+    element.clear();
     element.sendKeys(vtc.name);
   });
   driver.findElement(By.name("ou")).then(function(element) {
+    element.clear();
     element.sendKeys(vtc.postalCode + " " + vtc.city);
   });
   driver.findElement(By.xpath("//button[contains(@title,'Trouver')]")).click();
-  driver.wait(until.elementLocated(By.xpath("//a[text()='Afficher le n°']")), 10000);
-  processPage(vtc, function() {
-    console.log("one page done !");
-    driver.findElement(By.xpath("//span[text()='Page suivante']/parent::a")).then(function(element) {
-      console.log("at least one more page");
-    }, function(error) {
-      if (error.name !== "NoSuchElementError") return console.log("unexpected error !");
-      console.log("no more pages");
-    });
-  });
+
+  var processPageRecursive = function() {
+    driver.wait(until.elementLocated(By.xpath("//a[text()='Afficher le n°']")), 5000).then(
+      function() {
+        processPage(vtc, function() {
+          console.log("one page done !");
+          driver.findElement(By.xpath("//span[text()='Page suivante']/parent::a")).then(function(element) {
+            console.log("at least one more page");
+            element.click();
+            processPageRecursive();
+          }, function(error) {
+            if (error.name !== "NoSuchElementError") return console.log("unexpected error !");
+            console.log("no more pages");
+            callback();
+          });
+        });
+      },
+      function(error) {
+        console.log(colors.red("no results"));
+        callback();
+      }
+    );
+  };
+  processPageRecursive();
 };
 //#############################################################################
 var chromeCapabilities = webdriver.Capabilities.chrome();
@@ -176,6 +208,15 @@ driver.findElement(By.id('popinRetourVintage')).then(function(element) {
     console.log("aborting on beta version site");
   });
 }, function(error) {
-  iterateOnVtcFiles();
+
+  iterateOnVtcFiles(function(vtcs) {
+    console.log(vtcs.length);
+    var searchAll = function() {
+      var vtc = vtcs.pop();
+      search(vtc, searchAll);
+    };
+    searchAll();
+  });
+
 });
 //#############################################################################
