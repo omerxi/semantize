@@ -67,15 +67,9 @@ var parseHtmlFile = function(html) {
 var collectResult = function(item, acc) {
   return function() {
     var entry = {};
-    item.findElement(By.xpath("./span[@class = 'number']")).then(function(data) {
+    item.findElement(By.xpath("./div/h2/a")).then(function(data) {
       data.getText().then(function(data) {
-        entry.ordinal = data;
-      });
-    }).then(function(value) {
-      item.findElement(By.xpath("./div/h2/a")).then(function(data) {
-        data.getText().then(function(data) {
-          entry.name = data.replace(" + détails", "");
-        });
+        entry.name = data.replace(" + détails", "");
       });
     }).then(function(value) {
       item.findElement(By.xpath("./descendant::p[@class='itemAdresse']")).then(function(data) {
@@ -119,15 +113,12 @@ var processPage = function(vtc, callback) {
           task = flow.execute(collectResult(item, acc));
         });
         task.then(function() {
-          var data = "";
-          acc.map(function(entry) {
-            if (data !== "") data += ",\n";
-            entry["@context"] = "http://omerxi.com/ontologies/context_phone.jsonld";
-            data += JSON.stringify(entry, null, 2);
-          });
+          var data = {
+            results: acc
+          };
           var file = {
             path: outputPath + vtc.id + ".json",
-            content: "[" + data + "]"
+            content: "[" + JSON.stringify(data, null, 4) + "]"
           };
           save(file);
           callback(acc);
@@ -147,10 +138,8 @@ var readFile = function(i, file, callback) {
 var iterateOnVtcFiles = function(callback) {
   fs.readdir(inputPath, function function_name(err, files) {
     var vtcs = [];
-    for (var i = 0, n = 15 /*files.length*/ ; i < n; ++i) {
+    for (var i = 0, n = files.length; i < n; ++i) {
       readFile(i, inputPath + files[i], function(i, content) {
-        //console.log(i);
-        //console.log(files[i]);
         vtcs.push(parseHtmlFile(content));
         if (i + 1 === n) callback(vtcs);
       });
@@ -188,10 +177,12 @@ var search = function(vtc, callback) {
         });
       },
       function(error) {
-        //console.log(colors.red("no results"));
+        var data = {
+          results: []
+        };
         var file = {
-          path: outputPath + vtc.id + ".empty",
-          content: ""
+          path: outputPath + vtc.id + ".json",
+          content: "[" + JSON.stringify(data, null, 4) + "]"
         };
         save(file);
         callback();
