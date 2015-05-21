@@ -137,9 +137,11 @@ var readFile = function(i, file, callback) {
 //#############################################################################
 var iterateOnVtcFiles = function(callback) {
   fs.readdir(inputPath, function function_name(err, files) {
+    console.log("building context...");
     var vtcs = [];
     for (var i = 0, n = files.length; i < n; ++i) {
       readFile(i, inputPath + files[i], function(i, content) {
+        process.stdout.write("parsing : " + i + " on " + n + "\r");
         vtcs.push(parseHtmlFile(content));
         if (i + 1 === n) callback(vtcs);
       });
