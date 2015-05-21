@@ -84,6 +84,7 @@ var collectResult = function(item, acc) {
         });
       });
     }).then(function(value) {
+      // TODO fax, mobile, fixed
       item.findElements(By.xpath("./descendant::ul[contains(@class, 'blocPhoneNumber')]/li/strong")).then(function(data) {
         entry.phones = [];
         data.map(function(item) {
@@ -146,10 +147,10 @@ var readFile = function(i, file, callback) {
 var iterateOnVtcFiles = function(callback) {
   fs.readdir(inputPath, function function_name(err, files) {
     var vtcs = [];
-    for (var i = 0, n = 30 /*files.length*/ ; i < n; ++i) {
+    for (var i = 0, n = 15 /*files.length*/ ; i < n; ++i) {
       readFile(i, inputPath + files[i], function(i, content) {
-        console.log(i);
-        console.log(files[i]);
+        //console.log(i);
+        //console.log(files[i]);
         vtcs.push(parseHtmlFile(content));
         if (i + 1 === n) callback(vtcs);
       });
@@ -174,20 +175,20 @@ var search = function(vtc, callback) {
     driver.wait(until.elementLocated(By.xpath("//a[text()='Afficher le n°']")), 5000).then(
       function() {
         processPage(vtc, function() {
-          console.log("one page done !");
+          //console.log("one page done !");
           driver.findElement(By.xpath("//span[text()='Page suivante']/parent::a")).then(function(element) {
             console.log("at least one more page");
             element.click();
             processPageRecursive();
           }, function(error) {
             if (error.name !== "NoSuchElementError") return console.log("unexpected error !");
-            console.log("no more pages");
+            //console.log("no more pages");
             callback();
           });
         });
       },
       function(error) {
-        console.log(colors.red("no results"));
+        //console.log(colors.red("no results"));
         var file = {
           path: outputPath + vtc.id + ".empty",
           content: ""
@@ -208,15 +209,20 @@ chromeCapabilities.set('chromeOptions', chromeOptions);
 var driver = new webdriver.Builder().withCapabilities(chromeCapabilities).build();
 driver.get(seedUrl);
 driver.findElement(By.id('popinRetourVintage')).then(function(element) {
-  driver.wait(until.elementLocated(By.xpath('//*[@id="popinRetourVintage"]/div[2]/div/a[@title="Fermer"]')), 3000).then(function(element) {
+  driver.wait(until.elementLocated(By.xpath('//*[@id="popinRetourVintage"]/div[2]/div/a[@title="Fermer"]')), 5000).then(function(element) {
     console.log("aborting on beta version site");
+    driver.quit();
   });
 }, function(error) {
   iterateOnVtcFiles(function(vtcs) {
-    console.log(vtcs.length);
     var searchAll = function() {
-      var vtc = vtcs.pop();
-      search(vtc, searchAll);
+      if (vtcs.length === 0) {
+        console.log("All done !");
+        driver.quit();
+      } else {
+        var vtc = vtcs.pop();
+        search(vtc, searchAll);
+      }
     };
     searchAll();
   });
