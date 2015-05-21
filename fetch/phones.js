@@ -24,7 +24,7 @@ mkdirp(outputPath, function(err) {
 //#############################################################################
 var save = function(file) {
   fs.exists(file.path, function(exists) {
-    fs.appendFile(file.path, file.content, function(error) {
+    fs.writeFile(file.path, file.content, function(error) {
       if (error) console.error(colors.red("\n" + "Write error on : " + file.path + "\n" + error.message + "\n" + "content:\n" + file.content));
       else {
         console.log(colors.green(" -> " + file.path));
@@ -95,7 +95,7 @@ var collectResult = function(item, acc) {
   };
 };
 //#############################################################################
-var processPage = function(vtc, callback) {
+var processPage = function(vtc, acc, callback) {
   driver.findElements(By.xpath("//a[text()='Afficher le n°']")).then(function(elements) {
     var lastTask = null;
     var flow = promise.controlFlow();
@@ -104,28 +104,20 @@ var processPage = function(vtc, callback) {
         item.click();
       });
     });
-    var f = function() {
+    var f = function(acc) {
       var flow = promise.controlFlow();
       var task = null;
       driver.findElements(By.xpath("//*[@id='contentMain']/*/ol/li")).then(function(elements) {
-        var acc = [];
         elements.map(function(item) {
           task = flow.execute(collectResult(item, acc));
         });
         task.then(function() {
-          var data = {
-            results: acc
-          };
-          var file = {
-            path: outputPath + vtc.id + ".json",
-            content: "[" + JSON.stringify(data, null, 4) + "]"
-          };
-          save(file);
+          //console.log("page processed");
           callback(acc);
         });
       });
     };
-    lastTask.then(f(elements));
+    lastTask.then(f(acc));
   });
 };
 //#############################################################################
@@ -137,44 +129,62 @@ var readFile = function(i, file, callback) {
 //#############################################################################
 var iterateOnVtcFiles = function(callback) {
   fs.readdir(inputPath, function function_name(err, files) {
+    files.length = 100;
     console.log("building context...");
     var vtcs = [];
+    var total = files.length;
     for (var i = 0, n = files.length; i < n; ++i) {
-      readFile(i, inputPath + files[i], function(i, content) {
-        process.stdout.write("parsing : " + i + " on " + n + "\r");
+      var file = files[i];
+      readFile(i, inputPath + file, function(i, content) {
+        process.stdout.write("parsing : " + i + " on " + total + "\r");
         vtcs.push(parseHtmlFile(content));
-        if (i + 1 === n) callback(vtcs);
+        if (i + 1 === total) {
+          console.log("parsing : " + n + " on " + total);
+          callback(vtcs);
+        }
       });
     }
   });
 };
 //#############################################################################
 var search = function(vtc, callback) {
+
   console.log(vtc);
   driver.wait(until.elementLocated(By.name("nom")), 3000);
+
   driver.findElement(By.name("nom")).then(function(element) {
     element.clear();
     element.sendKeys(vtc.name);
   });
+
   driver.findElement(By.name("ou")).then(function(element) {
     element.clear();
     element.sendKeys(vtc.postalCode + " " + vtc.city);
   });
+
   driver.findElement(By.xpath("//button[contains(@title,'Trouver')]")).click();
 
-  var processPageRecursive = function() {
+  var processPageRecursive = function(acc) {
+
+    //console.log(acc.length);
+
     driver.wait(until.elementLocated(By.xpath("//a[text()='Afficher le n°']")), 5000).then(
       function() {
-        processPage(vtc, function() {
-          //console.log("one page done !");
+        processPage(vtc, acc, function(acc) {
           driver.findElement(By.xpath("//span[text()='Page suivante']/parent::a")).then(function(element) {
-            console.log("at least one more page");
             element.click();
-            processPageRecursive();
+            processPageRecursive(acc);
           }, function(error) {
             if (error.name !== "NoSuchElementError") return console.log("unexpected error !");
-            //console.log("no more pages");
-            callback();
+            var data = {
+              results: acc
+            };
+            var file = {
+              path: outputPath + vtc.id + ".json",
+              content: "[" + JSON.stringify(data, null, 4) + "]"
+            };
+            save(file);
+            callback(acc);
           });
         });
       },
@@ -191,7 +201,7 @@ var search = function(vtc, callback) {
       }
     );
   };
-  processPageRecursive();
+  processPageRecursive([]);
 };
 //#############################################################################
 var chromeCapabilities = webdriver.Capabilities.chrome();
@@ -208,12 +218,23 @@ driver.findElement(By.id('popinRetourVintage')).then(function(element) {
   });
 }, function(error) {
   iterateOnVtcFiles(function(vtcs) {
+    /*
+    vtcs = [{
+      name: 'Bénichou',
+      postalCode: '',
+      city: 'Paris',
+      id: 'EVTC444444444',
+      '@context': 'http://omerxi.com/ontologies/context_phone.jsonld',
+      '@id': 'potential-vtc-driver-match/EVTC006100043'
+    }];
+    */
     var searchAll = function() {
       if (vtcs.length === 0) {
         console.log("All done !");
         driver.quit();
       } else {
         var vtc = vtcs.pop();
+        console.log(vtc);
         search(vtc, searchAll);
       }
     };
