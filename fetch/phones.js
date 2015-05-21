@@ -1,7 +1,4 @@
 //#############################################################################
-// TODO handle results on several pages
-// TODO new site and old site navigation
-//#############################################################################
 var mkdirp = require('mkdirp');
 var colors = require('colors/safe');
 var fs = require("fs");
@@ -62,6 +59,8 @@ var parseHtmlFile = function(html) {
   json.city = nodes3[0].firstChild.data;
   var nodes4 = xpath.select("//title", doc);
   json.id = nodes4[0].firstChild.data;
+  json["@context"] = "http://omerxi.com/ontologies/context_phone.jsonld";
+  json["@id"] = "potential-vtc-driver-match/" + json.id;
   return json;
 };
 //#############################################################################
@@ -97,7 +96,7 @@ var collectResult = function(item, acc) {
       acc.push(entry);
       console.log(entry);
     });
-    return promise.delayed(250);
+    return promise.delayed(100);
   };
 };
 //#############################################################################
@@ -147,7 +146,7 @@ var readFile = function(i, file, callback) {
 var iterateOnVtcFiles = function(callback) {
   fs.readdir(inputPath, function function_name(err, files) {
     var vtcs = [];
-    for (var i = 0, n = 5 /*files.length*/ ; i < n; ++i) {
+    for (var i = 0, n = 30 /*files.length*/ ; i < n; ++i) {
       readFile(i, inputPath + files[i], function(i, content) {
         console.log(i);
         console.log(files[i]);
@@ -189,6 +188,11 @@ var search = function(vtc, callback) {
       },
       function(error) {
         console.log(colors.red("no results"));
+        var file = {
+          path: outputPath + vtc.id + ".empty",
+          content: ""
+        };
+        save(file);
         callback();
       }
     );
@@ -208,7 +212,6 @@ driver.findElement(By.id('popinRetourVintage')).then(function(element) {
     console.log("aborting on beta version site");
   });
 }, function(error) {
-
   iterateOnVtcFiles(function(vtcs) {
     console.log(vtcs.length);
     var searchAll = function() {
@@ -217,6 +220,5 @@ driver.findElement(By.id('popinRetourVintage')).then(function(element) {
     };
     searchAll();
   });
-
 });
 //#############################################################################
