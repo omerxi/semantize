@@ -142,7 +142,7 @@ var getRecord = function(i, offset, total, dateRange, callback) {
       element.findElement(By.xpath("./fieldset[1]/table[1]/tbody/tr[1]/td/div")).getText().then(function(id) {
         var file = {
           path: outputPath + id + ".html",
-          content: "<html><head><meta charset='UTF-8'><title>" + id + "</title></head><body>" + data + "</body></html>"
+          content: "<html><head><meta charset='UTF-8'/><title>" + id + "</title></head><body>" + data + "</body></html>"
         };
         util.print(colors.green("Successful fetch of " + (i + offset) + " on " + total + " | " + id));
         callback({

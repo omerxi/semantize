@@ -1,5 +1,5 @@
-// TODO new site and old site navigation
 //#############################################################################
+var mkdirp = require('mkdirp');
 var colors = require('colors/safe');
 var fs = require("fs");
 var webdriver = require("selenium-webdriver");
@@ -8,14 +8,19 @@ var chrome = require('selenium-webdriver/chrome');
 var By = require("selenium-webdriver").By;
 var until = require("selenium-webdriver").until;
 var xpath = require('xpath');
-var dom = require('xmldom').DOMParser;
+var DOMParser = require('xmldom').DOMParser;
 //#############################################################################
 var args = process.argv.slice(2);
 //#############################################################################
 var inputPath = args[0];
 //#############################################################################
 var seedUrl = args[1];
-console.log(colors.blue(seedUrl));
+//#############################################################################
+var outputPath = args[2];
+mkdirp(outputPath, function(err) {
+  if (err) console.error(err);
+  else console.log("will write files to " + outputPath);
+});
 //#############################################################################
 var save = function(file) {
   fs.exists(file.path, function(exists) {
@@ -31,30 +36,40 @@ var save = function(file) {
 //#############################################################################
 var parseHtmlFile = function(html) {
   var json = {};
-  var doc = new dom().parseFromString(html);
+  var doc = new DOMParser({
+    locator: {},
+    errorHandler: {
+      warning: function(w) {
+        console.warn(w);
+        console.log(colors.red(html));
+      }
+    }
+  }).parseFromString(html);
   var nodes = xpath.select("//b[text()='Représentant principal']/following-sibling::div", doc);
-  json.name = nodes[0].firstChild.data.match("(.+), .+")[1];
+  if (nodes.length === 0) {
+    var prenom = xpath.select("//td[text()='Nom']/following-sibling::td/div", doc)[0].firstChild.data;
+    var nom = xpath.select("//td[text()='Prénom']/following-sibling::td/div", doc)[0].firstChild.data;
+    json.name = prenom + " " + nom;
+  } else {
+    json.name = nodes[0].firstChild.data.match("(.+), .+")[1];
+  }
   var nodes2 = xpath.select("//td[text()='Code Postal']/following-sibling::td/div", doc);
   json.postalCode = nodes2[0].firstChild.data;
   var nodes3 = xpath.select("//td[text()='Ville']/following-sibling::td/div", doc);
   json.city = nodes3[0].firstChild.data;
   var nodes4 = xpath.select("//title", doc);
   json.id = nodes4[0].firstChild.data;
+  json["@context"] = "http://omerxi.com/ontologies/context_phone.jsonld";
+  json["@id"] = "potential-vtc-driver-match/" + json.id;
   return json;
 };
 //#############################################################################
 var collectResult = function(item, acc) {
   return function() {
     var entry = {};
-    item.findElement(By.xpath("./span[@class = 'number']")).then(function(data) {
+    item.findElement(By.xpath("./div/h2/a")).then(function(data) {
       data.getText().then(function(data) {
-        entry.ordinal = data;
-      });
-    }).then(function(value) {
-      item.findElement(By.xpath("./div/h2/a")).then(function(data) {
-        data.getText().then(function(data) {
-          entry.name = data.replace(" + détails", "");
-        });
+        entry.name = data.replace(" + détails", "");
       });
     }).then(function(value) {
       item.findElement(By.xpath("./descendant::p[@class='itemAdresse']")).then(function(data) {
@@ -63,6 +78,7 @@ var collectResult = function(item, acc) {
         });
       });
     }).then(function(value) {
+      // TODO fax, mobile, fixed
       item.findElements(By.xpath("./descendant::ul[contains(@class, 'blocPhoneNumber')]/li/strong")).then(function(data) {
         entry.phones = [];
         data.map(function(item) {
@@ -75,11 +91,11 @@ var collectResult = function(item, acc) {
       acc.push(entry);
       console.log(entry);
     });
-    return promise.delayed(250);
+    return promise.delayed(100);
   };
 };
 //#############################################################################
-var processPage = function(vtc, callback) {
+var processPage = function(vtc, acc, callback) {
   driver.findElements(By.xpath("//a[text()='Afficher le n°']")).then(function(elements) {
     var lastTask = null;
     var flow = promise.controlFlow();
@@ -88,108 +104,141 @@ var processPage = function(vtc, callback) {
         item.click();
       });
     });
-    var f = function() {
+    var f = function(acc) {
       var flow = promise.controlFlow();
       var task = null;
       driver.findElements(By.xpath("//*[@id='contentMain']/*/ol/li")).then(function(elements) {
-        var acc = [];
         elements.map(function(item) {
           task = flow.execute(collectResult(item, acc));
         });
         task.then(function() {
-          var data = "";
-          acc.map(function(entry) {
-            if (data !== "") data += ",\n";
-            data += JSON.stringify(entry, null, 2);
-          });
-          var file = {
-            path: "/tmp/" + vtc.id + ".json",
-            content: "[" + data + "]"
-          };
-          save(file);
+          //console.log("page processed");
           callback(acc);
         });
       });
     };
-    lastTask.then(f(elements));
+    lastTask.then(f(acc));
   });
 };
 //#############################################################################
-var search = function() {
+var readFile = function(i, file, callback) {
+  fs.readFile(file, "utf8", function(err, content) {
+    callback(i, content);
+  });
+};
+//#############################################################################
+var iterateOnVtcFiles = function(callback) {
   fs.readdir(inputPath, function function_name(err, files) {
-    var n = files.length;
-    for (var i = 0; i < 1; ++i) {
-      var fileName = files[i];
-      fs.readFile(inputPath + fileName, "utf8", function(err, content) {
-        var vtc = parseHtmlFile(content);
-        console.log(colors.yellow(JSON.stringify(vtc, null, 2)));
-        driver.wait(until.elementLocated(By.name("nom")), 3000);
-        driver.findElement(By.name("nom")).then(function(element) {
-          //element.sendKeys(name);
-          element.sendKeys("Bénichou");
-        });
-        driver.findElement(By.name("ou")).then(function(element) {
-          //element.sendKeys(postalCode + " " + city);
-          element.sendKeys("75015" + " " + "Paris");
-        });
-        driver.findElement(By.xpath("//button[contains(@title,'Trouver')]")).click();
-        driver.wait(until.elementLocated(By.xpath("//a[text()='Afficher le n°']")), 10000);
-        processPage(vtc, function () {
-          console.log("one page done !");
-        });
+    files.length = 100;
+    console.log("building context...");
+    var vtcs = [];
+    var total = files.length;
+    for (var i = 0, n = files.length; i < n; ++i) {
+      var file = files[i];
+      readFile(i, inputPath + file, function(i, content) {
+        process.stdout.write("parsing : " + i + " on " + total + "\r");
+        vtcs.push(parseHtmlFile(content));
+        if (i + 1 === total) {
+          console.log("parsing : " + n + " on " + total);
+          callback(vtcs);
+        }
       });
     }
   });
 };
 //#############################################################################
+var search = function(vtc, callback) {
 
-/*
-var service = new chrome.ServiceBuilder(__dirname + '/node_modules/.bin/chromedriver').build();
-var chromeCapabilities = webdriver.Capabilities.chrome();
-var chromeOptions = {
-  'args': [
-    '--proxy-server="localhost:8118"',
-    '--start-maximized',
-    //'--proxy-server="socks5://localhost:8118"',
-    //'--host-resolver-rules="MAP * 0.0.0.0 , EXCLUDE localhost"'
-  ]
+  console.log(vtc);
+  driver.wait(until.elementLocated(By.name("nom")), 3000);
+
+  driver.findElement(By.name("nom")).then(function(element) {
+    element.clear();
+    element.sendKeys(vtc.name);
+  });
+
+  driver.findElement(By.name("ou")).then(function(element) {
+    element.clear();
+    element.sendKeys(vtc.postalCode + " " + vtc.city);
+  });
+
+  driver.findElement(By.xpath("//button[contains(@title,'Trouver')]")).click();
+
+  var processPageRecursive = function(acc) {
+
+    //console.log(acc.length);
+
+    driver.wait(until.elementLocated(By.xpath("//a[text()='Afficher le n°']")), 5000).then(
+      function() {
+        processPage(vtc, acc, function(acc) {
+          driver.findElement(By.xpath("//span[text()='Page suivante']/parent::a")).then(function(element) {
+            element.click();
+            processPageRecursive(acc);
+          }, function(error) {
+            if (error.name !== "NoSuchElementError") return console.log("unexpected error !");
+            var data = {
+              results: acc
+            };
+            var file = {
+              path: outputPath + vtc.id + ".json",
+              content: "[" + JSON.stringify(data, null, 4) + "]"
+            };
+            save(file);
+            callback(acc);
+          });
+        });
+      },
+      function(error) {
+        var data = {
+          results: []
+        };
+        var file = {
+          path: outputPath + vtc.id + ".json",
+          content: "[" + JSON.stringify(data, null, 4) + "]"
+        };
+        save(file);
+        callback();
+      }
+    );
+  };
+  processPageRecursive([]);
 };
-*/
-//chromeCapabilities.set('chromeOptions', chromeOptions);
-//var driver = new chrome.createDriver(webdriver.Capabilities.chrome(), service);
-//var driver = new chrome.createDriver(chromeCapabilities, service);
-//var driver = new webdriver.Builder().withCapabilities(chromeCapabilities).build();
-
-
-
+//#############################################################################
 var chromeCapabilities = webdriver.Capabilities.chrome();
 var chromeOptions = {
-  'args': [
-    '--start-maximized',
-  ]
+  'args': ['--start-maximized']
 };
 chromeCapabilities.set('chromeOptions', chromeOptions);
-
-var driver = new webdriver.Builder()
-  //.withCapabilities(webdriver.Capabilities.chrome())
-  .withCapabilities(chromeCapabilities)
-  /*
-  .setProxy(proxy.manual({
-    http: 'localhost:8118',
-    https: 'localhost:8118'
-  }))
-  */
-  .build();
-
-
+var driver = new webdriver.Builder().withCapabilities(chromeCapabilities).build();
 driver.get(seedUrl);
-//driver.get("https://check.torproject.org/");
-//driver.wait(until.elementLocated(By.xpath('//*[@id="popinRetourVintage"]/div[2]/div/a[@title="Fermer"]')), 3000);
-
 driver.findElement(By.id('popinRetourVintage')).then(function(element) {
-  driver.wait(until.elementLocated(By.xpath('//*[@id="popinRetourVintage"]/div[2]/div/a[@title="Fermer"]')), 3000).then(function(element) {
+  driver.wait(until.elementLocated(By.xpath('//*[@id="popinRetourVintage"]/div[2]/div/a[@title="Fermer"]')), 5000).then(function(element) {
     console.log("aborting on beta version site");
+    driver.quit();
   });
 }, function(error) {
-  search();
+  iterateOnVtcFiles(function(vtcs) {
+    /*
+    vtcs = [{
+      name: 'Bénichou',
+      postalCode: '',
+      city: 'Paris',
+      id: 'EVTC444444444',
+      '@context': 'http://omerxi.com/ontologies/context_phone.jsonld',
+      '@id': 'potential-vtc-driver-match/EVTC006100043'
+    }];
+    */
+    var searchAll = function() {
+      if (vtcs.length === 0) {
+        console.log("All done !");
+        driver.quit();
+      } else {
+        var vtc = vtcs.pop();
+        console.log(vtc);
+        search(vtc, searchAll);
+      }
+    };
+    searchAll();
+  });
 });
+//#############################################################################
