@@ -2,11 +2,15 @@
 var mkdirp = require('mkdirp');
 var colors = require('colors/safe');
 var fs = require("fs");
+
+//#############################################################################
 var webdriver = require("selenium-webdriver");
 var promise = require("selenium-webdriver").promise;
 var chrome = require('selenium-webdriver/chrome');
 var By = require("selenium-webdriver").By;
 var until = require("selenium-webdriver").until;
+//#############################################################################
+
 var xpath = require('xpath');
 var DOMParser = require('xmldom').DOMParser;
 //#############################################################################
