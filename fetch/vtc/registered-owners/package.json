@@ -5,13 +5,12 @@
   "dependencies": {
     "chromedriver": "^2.15.0",
     "colors": "^1.1.0",
-    "fs": "0.0.2",
     "mkdirp": "^0.5.1",
     "selenium-webdriver": "^2.45.1",
     "util": "^0.10.3"
   },
   "description": "Fetch registered vtc owners from a given url.",
-  "main": "registered-vtc-owners.js",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/omerxi/semantize.git"

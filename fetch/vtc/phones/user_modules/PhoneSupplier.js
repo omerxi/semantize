@@ -7,7 +7,6 @@ PhoneSupplier.prototype = {
   constructor: PhoneSupplier,
 
   connectTo: function(url, timeout) {
-    console.log(url);
     this.driver.get(url);
     return this.driver.waitFor({
       'xpath': '//a[@title="Fermer"]',
@@ -121,10 +120,41 @@ PhoneSupplier.prototype = {
     this.driver.findOne({
       'xpath': "//a[@title='Aller en page suivante']"
     }).then(yes, no);
+  },
+
+  iterateOnPageResults: function(allResults, callback) {
+    this.getPageResults(function(pageResults) {
+      this.hasNextPage(function(element) {
+        element.click();
+        this.iterateOnPageResults(allResults.concat(pageResults), callback);
+      }, function() {
+        callback(allResults.concat(pageResults));
+      });
+    }.bind(this));
+  },
+
+  collectAllResults: function(data, callback) {
+    allResults = [];
+    this.search(data.who, data.where, data.timeout).then(function() {
+      this.iterateOnPageResults(allResults, callback);
+    }.bind(this));
+  },
+
+  get: function(data) {
+    this.collectAllResults(data, function(allResults) {
+      var fs = require("fs");
+      fs.writeFile(data.output, JSON.stringify(allResults), function(error) {
+        if (!error) console.log("Collected " + allResults.length + " entries with success in " + data.output);
+      });
+    });
+  },
+
+  apply: function(data) {
+    this.connectTo(data.url, data.timeout).then(function() {
+      this.get(data);
+    }.bind(this));
+    this.driver.quit();
   }
-
-
-
 
 };
 
