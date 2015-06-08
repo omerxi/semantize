@@ -14,7 +14,7 @@ PhoneSupplier.prototype = {
       'timeout': timeout
     }).then(function(element) {
       element.click();
-    });
+    }, function() {});
   },
 
   search: function(who, where, timeout) {
@@ -110,10 +110,22 @@ PhoneSupplier.prototype = {
           page.push(collector);
         });
       }.bind(this))
-    }.bind(this)).then(function() {
+    }.bind(this))
+
+    .then(function() {
       callback(page);
     });
+  },
+
+  hasNextPage: function(yes, no) {
+    this.driver.findOne({
+      'xpath': "//a[@title='Aller en page suivante']"
+    }).then(yes, no);
   }
+
+
+
+
 };
 
 module.exports = {
