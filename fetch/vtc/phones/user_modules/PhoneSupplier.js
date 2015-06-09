@@ -84,7 +84,7 @@ PhoneSupplier.prototype = {
         collector.phones = [];
         data.map(function(item) {
           item.getText().then(function(data) {
-            collector.phones.push(data);
+            collector.phones.push(data.replace(/^\./, ''));
           });
         });
       });
