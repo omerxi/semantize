@@ -9,7 +9,7 @@
     "selenium-webdriver": "^2.45.1"
   },
   "scripts": {
-    "start": "node index.js '{\"url\": \"http://www.my-phone-supplier.com\", \"who\": \"John Doo\", \"where\": \"Paris\", \"timeout\": 60000}'",
+    "start": "node index.js '{\"url\": \"http://www.my-phone-supplier.com\", \"who\": \"John Doo\", \"where\": \"75013 Paris\", \"timeout\": 60*1000}'",
   },
   "repository": {
     "type": "git",
