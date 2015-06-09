@@ -18,3 +18,5 @@ It will run :
 `node index.js '{"url": "http://www.my-phone-supplier.com", "who": "John Doo", "where": "75013 Paris", "timeout": 60*1000}'`
 
 Make sur to replace the 'url' parameter by the appropriate phone supplier url.
+
+You might need to have the [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) installed on your system.
