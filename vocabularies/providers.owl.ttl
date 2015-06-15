@@ -1,0 +1,110 @@
+
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix cob:  <http://cobusiness.fr/ontologies/barter.owl.n3#> .
+@prefix oxi:  <http://omerxi.co/ontologies/core.owl.ttl#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix con: <http://www.w3.org/2000/10/swap/pim/contact#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix form: <http://deductions-software.com/ontologies/forms.owl.ttl#> .
+
+oxi:storeName a owl:DatatypeProperty ;
+	rdfs:domain oxi:Provider ;
+	rdfs:label "Enseigne"@fr .
+
+oxi:sourceCategory a owl:DatatypeProperty ;
+	rdfs:domain oxi:Provider ;
+	rdfs:label "Catégorie de source"@fr ;
+	rdfs:comment """ Catégorie de fournisseur """.
+
+oxi:offerCategory a owl:DatatypeProperty ;
+	rdfs:domain oxi:Provider ;
+	rdfs:label "Catégorie d'offre"@fr .
+oxi:offerSubcategory a owl:DatatypeProperty ;
+	rdfs:domain oxi:Provider ;
+	rdfs:label " Sous-catégorie d'offre "@fr .
+
+oxi:informationSource a owl:DatatypeProperty ;
+	rdfs:domain oxi:Provider ;
+	rdfs:label " Source d'information"@fr .
+
+oxi:offerTitle a owl:DatatypeProperty ;
+	rdfs:domain oxi:Provider ;
+	rdfs:label " Titre de l'offre "@fr .
+oxi:discount a owl:DatatypeProperty ;
+	rdfs:domain oxi:Provider ;
+	rdfs:range xsd:integer ;
+	rdfs:label " Réduction en % "@fr .
+oxi:providerEnterprise a owl:DatatypeProperty ;
+	rdfs:domain oxi:Provider ;
+	rdfs:label " Entreprise fournisseur "@fr ;
+	rdfs:comment """ ???????????? """.
+oxi:franchisedSupplier a owl:DatatypeProperty ;
+	rdfs:domain oxi:Provider ;
+	rdfs:label " Entreprise fournisseur franchisée "@fr ;
+	rdfs:comment """ ???????????? """.
+
+oxi:mainContactPerson a owl:DatatypeProperty ;
+	rdfs:domain oxi:Provider ;
+	rdfs:label " Contact principal "@fr .
+
+
+oxi:mainContactTitle a owl:DatatypeProperty ;
+	rdfs:domain oxi:Provider ;
+	rdfs:label " Titre du contact principal "@fr .
+
+
+oxi:mainContactInformation a owl:DatatypeProperty ;
+	rdfs:domain oxi:Provider ;
+	rdfs:label " coordonnées du contact principal "@fr .
+
+oxi:actionTaken a owl:DatatypeProperty ;
+	rdfs:domain oxi:Provider ;
+	rdfs:label " action menée "@fr .
+
+oxi:actionToTake a owl:DatatypeProperty ;
+	rdfs:domain oxi:Provider ;
+	rdfs:label " action à mener "@fr .
+
+oxi:targetedSegments a owl:DatatypeProperty ;
+	rdfs:domain oxi:Provider ;
+	rdfs:label " Segments cibles "@fr .
+
+oxi:specialty a owl:DatatypeProperty ;
+	rdfs:domain oxi:Provider ;
+	rdfs:label " Spécialité "@fr .
+
+
+<omerxi-provider-form>
+  form:classDomain oxi:Provider ;
+  form:showProperties (
+    oxi:storeName
+    oxi:sourceCategory
+    oxi:offerCategory
+    oxi:offerSubcategory
+    oxi:informationSource
+    oxi:offerTitle
+    oxi:discount
+    oxi:providerEnterprise
+    oxi:franchisedSupplier
+
+        vcard:postal-code
+        foaf:phone
+        foaf:mbox
+oxi:mainContactPerson
+oxi:mainContactTitle
+oxi:mainContactInformation
+
+oxi:actionTaken
+oxi:actionToTake
+oxi:targetedSegments
+oxi:specialty
+
+).
+
+# oxi: rdfs:domain oxi:Provider ; rdfs:label " Adresse "@fr .  
+# oxi: rdfs:domain oxi:Provider ; rdfs:label " Ville "@fr .
+
+#  Source category Source of Information Subcategory offer Job category Bid Title% Reduction provider franchised postal code Company Address City Phone number Primary Contact Title Primary Contact details of the main contact action Action to conduct target Segments Specialty
