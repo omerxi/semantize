@@ -10,6 +10,10 @@
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 @prefix form: <http://deductions-software.com/ontologies/forms.owl.ttl#> .
 
+<> a owl:Ontology ; rdfs:label "Service providers" .
+
+oxi:Provider a owl:Class .
+
 oxi:storeName a owl:DatatypeProperty ;
 	rdfs:domain oxi:Provider ;
 	rdfs:label "Enseigne"@fr .
@@ -40,11 +44,11 @@ oxi:discount a owl:DatatypeProperty ;
 oxi:providerEnterprise a owl:DatatypeProperty ;
 	rdfs:domain oxi:Provider ;
 	rdfs:label " Entreprise fournisseur "@fr ;
-	rdfs:comment """ ???????????? """.
+	rdfs:comment """ Entreprise qui facture le chauffeur ou l'exploitant VTC """.
 oxi:franchisedSupplier a owl:DatatypeProperty ;
 	rdfs:domain oxi:Provider ;
 	rdfs:label " Entreprise fournisseur franchisée "@fr ;
-	rdfs:comment """ ???????????? """.
+        rdfs:range xsd:boolean .
 
 oxi:mainContactPerson a owl:DatatypeProperty ;
 	rdfs:domain oxi:Provider ;
@@ -70,11 +74,14 @@ oxi:actionToTake a owl:DatatypeProperty ;
 
 oxi:targetedSegments a owl:DatatypeProperty ;
 	rdfs:domain oxi:Provider ;
-	rdfs:label " Segments cibles "@fr .
+	rdfs:label " Segments cibles "@fr ;
+        rdfs:comment """ public visé, par exemple fonctionnaires, particuliers, etc;
+                      devrait être un énuméré avec multi-valeurs"""@fr .
 
 oxi:specialty a owl:DatatypeProperty ;
 	rdfs:domain oxi:Provider ;
-	rdfs:label " Spécialité "@fr .
+	rdfs:label " Spécialité "@fr ;
+        rdfs:comment "== coeur de métier; par exemple pour Total c'est le carburant"@fr .
 
 
 <omerxi-provider-form>
@@ -82,11 +89,14 @@ oxi:specialty a owl:DatatypeProperty ;
   form:showProperties (
     oxi:storeName
     oxi:sourceCategory
+
+# champs liés à l'offre
     oxi:offerCategory
     oxi:offerSubcategory
     oxi:informationSource
     oxi:offerTitle
     oxi:discount
+
     oxi:providerEnterprise
     oxi:franchisedSupplier
 
