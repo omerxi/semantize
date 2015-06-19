@@ -145,7 +145,7 @@ PhoneSupplier.prototype = {
   get: function(data) {
     return this.collectAllResults(data, function(allResults) {
       var fs = require("fs");
-      fs.writeFile(data.output, JSON.stringify(allResults), function(error) {
+      fs.writeFile(data.output, JSON.stringify(allResults, null, 4), function(error) {
         if (!error) console.log("Collected " + allResults.length + " entries with success in " + data.output);
       });
     });
