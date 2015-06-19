@@ -7,16 +7,18 @@ PhoneSupplier.prototype = {
   constructor: PhoneSupplier,
 
   connectTo: function(url, timeout) {
-    this.driver.get(url);
+    this.driver.get(url)
     return this.driver.waitFor({
-      'xpath': '//a[@title="Fermer"]',
+      'xpath': '//*[@id="popinRetourVintage"]/div[2]/div[2]/article/button[1]',
       'timeout': timeout
     }).then(function(element) {
+      console.log("Connected");
       element.click();
     }, function() {});
   },
 
   search: function(who, where, timeout) {
+    console.log("Searching " + who + " " + where);
     this.driver.findOne({
       'id': 'pj_search_qui'
     }).then(function(element) {
@@ -30,7 +32,7 @@ PhoneSupplier.prototype = {
       element.sendKeys(where);
     });
     this.driver.findOne({
-      'xpath': '//button[@title="Trouver"]'
+      'xpath': '//button[@title="Trouver"][1]'
     }).then(function(element) {
       element.click();
     });
@@ -39,15 +41,6 @@ PhoneSupplier.prototype = {
       'timeout': timeout
     }).then(function(element) {
       element.click();
-    });
-  },
-
-  // TODO privatize
-  _displayPhone: function(entry) {
-    this.driver.findOne({
-      'xpath': './descendant::a[text()="Afficher le n°"]'
-    }, entry).then(function(displayPhoneButton) {
-      displayPhoneButton.click();
     });
   },
 
@@ -66,7 +59,7 @@ PhoneSupplier.prototype = {
   // TODO privatize
   _getAddress: function(entry, collector) {
     this.driver.findOne({
-        'xpath': './descendant::p[@class="itemAdresse"]'
+        'xpath': './descendant::p[@class="itemAdresse"][1]'
       }, entry)
       .then(function(data) {
         data.getText().then(function(data) {
@@ -98,12 +91,19 @@ PhoneSupplier.prototype = {
       var lastTask = null;
       var flow = this.driver.newFlow();
       elements.map(function(entry) {
+        console.log('.');
         var collector = {};
         lastTask = flow.execute(function() {
-          this._displayPhone(entry);
-          this._getName(entry, collector);
-          this._getAddress(entry, collector);
-          this._getPhones(entry, collector);
+          this.driver.findOne({
+            'xpath': './descendant::a[text()="Afficher le n°"][1]'
+          }, entry).then(function(element) {
+            element.click();
+            this._getName(entry, collector);
+            this._getAddress(entry, collector);
+            this._getPhones(entry, collector);
+          }.bind(this), function() {
+            console.log("skipping entry without any phone");
+          });
         }.bind(this));
         lastTask.then(function() {
           page.push(collector);
@@ -116,18 +116,20 @@ PhoneSupplier.prototype = {
     });
   },
 
-  hasNextPage: function(yes, no) {
-    this.driver.findOne({
-      'xpath': "//a[@title='Aller en page suivante']"
-    }).then(yes, no);
-  },
-
   iterateOnPageResults: function(allResults, callback) {
     this.getPageResults(function(pageResults) {
-      this.hasNextPage(function(element) {
-        element.click();
-        this.iterateOnPageResults(allResults.concat(pageResults), callback);
-      }, function() {
+      this.driver.findOne({
+        "xpath": "//li[@class='linkNext']/a[1]"
+      }).
+      then(function(element) {
+        console.log("It has Next page");
+        element.getText().then(function(data) {
+          console.log(data);
+        });
+        element.click().then(function() {
+          this.iterateOnPageResults(allResults.concat(pageResults), callback);
+        }.bind(this));
+      }.bind(this), function() {
         callback(allResults.concat(pageResults));
       });
     }.bind(this));
@@ -135,13 +137,13 @@ PhoneSupplier.prototype = {
 
   collectAllResults: function(data, callback) {
     allResults = [];
-    this.search(data.who, data.where, data.timeout).then(function() {
+    return this.search(data.who, data.where, data.timeout).then(function() {
       this.iterateOnPageResults(allResults, callback);
     }.bind(this));
   },
 
   get: function(data) {
-    this.collectAllResults(data, function(allResults) {
+    return this.collectAllResults(data, function(allResults) {
       var fs = require("fs");
       fs.writeFile(data.output, JSON.stringify(allResults), function(error) {
         if (!error) console.log("Collected " + allResults.length + " entries with success in " + data.output);
@@ -151,9 +153,10 @@ PhoneSupplier.prototype = {
 
   apply: function(data) {
     this.connectTo(data.url, data.timeout).then(function() {
-      this.get(data);
+      this.get(data).then(function() {
+        this.driver.quit();
+      }.bind(this))
     }.bind(this));
-    this.driver.quit();
   }
 
 };

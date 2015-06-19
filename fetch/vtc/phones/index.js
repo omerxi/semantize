@@ -1,9 +1,12 @@
 //##############################################################################
 var configuration = require('./user_modules/Configuration.js').getInstance();
-var chromeDriver = require('./user_modules/ChromeDriver.js').getInstance(['--start-maximized']);
-var phoneSupplier = require('./user_modules/PhoneSupplier.js').getInstance(chromeDriver);
 //##############################################################################
 (function(data) {
+  var chromeDriver = require('./user_modules/ChromeDriver.js').getInstance({
+    options: ['--start-maximized'],
+    remote: data.remote
+  });
+  var phoneSupplier = require('./user_modules/PhoneSupplier.js').getInstance(chromeDriver);
   phoneSupplier.apply(data);
 }({
   url: configuration.get('url') || function() {
@@ -19,6 +22,7 @@ var phoneSupplier = require('./user_modules/PhoneSupplier.js').getInstance(chrom
     process.exit(1);
   }(),
   timeout: configuration.get('timeout') || 30 * 1000,
-  output: configuration.get('output') || '/tmp/output.json'
+  output: configuration.get('output') || '/tmp/output.json',
+  remote: configuration.get('remote')
 }));
 //##############################################################################
