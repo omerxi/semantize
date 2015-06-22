@@ -1,0 +1,22 @@
+{
+  "name": "registered-vtc-owners",
+  "version": "0.0.1",
+  "private": false,
+  "dependencies": {
+    "chromedriver": "^2.15.0",
+    "colors": "^1.1.0",
+    "mkdirp": "^0.5.1",
+    "selenium-webdriver": "^2.45.1",
+    "util": "^0.10.3"
+  },
+  "description": "Fetch registered vtc owners from a given url.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omerxi/semantize.git"
+  },
+  "bugs": {
+    "url": "https://github.com/omerxi/semantize/issues"
+  },
+  "homepage": "https://github.com/omerxi/semantize#readme"
+}
