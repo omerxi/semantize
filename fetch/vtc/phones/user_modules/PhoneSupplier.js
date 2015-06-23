@@ -9,7 +9,7 @@ PhoneSupplier.prototype = {
   connectTo: function(url, timeout) {
     this.driver.get(url)
     return this.driver.waitFor({
-      'xpath': '//*[@id="popinRetourVintage"]/div[2]/div[2]/article/button[1]',
+      'xpath': '//a[@class="pjpopin-closer"][1]',
       'timeout': timeout
     }).then(function(element) {
       console.log("Connected");
@@ -144,10 +144,33 @@ PhoneSupplier.prototype = {
 
   get: function(data) {
     return this.collectAllResults(data, function(allResults) {
+
+      // TODO inject function
+      var i = 0;
+      var copy = [];
+
+      var json_ld_context = {
+        "name": "http://omerxi.com/ontologies/core.owl.ttl#name",
+        "address": "http://omerxi.com/ontologies/core.owl.ttl#address",
+        "phones": "http://omerxi.com/ontologies/core.owl.ttl#phones",
+        "timeout": "http://omerxi.com/ontologies/core.owl.ttl#timeout",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "vcard": "http://www.w3.org/2006/vcard/ns#",
+        "oxi": "http://omerxi.com/ontologies/core.owl.ttl#"
+      };
+
+      allResults.map(function(result) {
+        result['@id'] = "potential-match:" + (++i);
+        result['@context'] = json_ld_context;
+        copy.push(result);
+      });
+      allResults = copy;
+
       var fs = require("fs");
       fs.writeFile(data.output, JSON.stringify(allResults, null, 4), function(error) {
         if (!error) console.log("Collected " + allResults.length + " entries with success in " + data.output);
       });
+
     });
   },
 
