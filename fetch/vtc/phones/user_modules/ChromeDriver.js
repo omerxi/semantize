@@ -58,7 +58,11 @@ ChromeDriver.prototype = {
 
   newFlow: function() {
     return promise.controlFlow();
-  }
+  },
+
+  reject: function(message) {
+    return promise.rejected(message);
+  },
 
 };
 

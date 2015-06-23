@@ -14,7 +14,9 @@ PhoneSupplier.prototype = {
     }).then(function(element) {
       console.log("Connected");
       element.click();
-    }, function() {});
+    }, function() {
+      return this.driver.reject(new Error("could not connect to " + url));
+    }.bind(this));
   },
 
   search: function(who, where, timeout) {
