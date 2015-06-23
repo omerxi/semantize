@@ -160,7 +160,7 @@ PhoneSupplier.prototype = {
       };
 
       allResults.map(function(result) {
-        result['@id'] = "potential-match:" + (++i);
+        result['@id'] = "phones:potential-match:" + (++i);
         result['@context'] = json_ld_context;
         copy.push(result);
       });
