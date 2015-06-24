@@ -9,7 +9,7 @@
 <!-- date de mise à jour de la fiche -->
   <xsl:template match="//table[@class='ficheDescrLinks']/tbody/tr[2]/td/i/span/text()">
     <data>
-      <property>Fiche mise à jour le</property>
+      <label>Fiche mise à jour le</label>
       <value>
         <xsl:value-of select='.'/>
       </value>
@@ -18,9 +18,9 @@
 <!-- tout le reste -->
   <xsl:template match="//table[@class='formStyle']/tbody/tr">
     <data>
-      <property>
+      <label>
         <xsl:value-of select='./td[1]'/>
-      </property>
+      </label>
       <value>
         <xsl:value-of select='./td[2]/normalize-space()'/>
       </value>

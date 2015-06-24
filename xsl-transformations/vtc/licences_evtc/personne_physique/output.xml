@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
    <data>
-      <property>Fiche mise à jour le</property>
+      <label>Fiche mise à jour le</label>
       <value>26/02/2014</value>
    </data>
    <data>
-      <property>Nom</property>
+      <label>Nom</label>
       <value>PHILIPPEAU</value>
    </data>
    <data>
-      <property>Prénom</property>
+      <label>Prénom</label>
       <value>EMMANUEL</value>
    </data>
    <data>
-      <property>Marque / Nom commercial</property>
+      <label>Marque / Nom commercial</label>
       <value>ROYALE ROUTE SERVICES</value>
    </data>
    <data>
-      <property>Numéro d’immatriculation</property>
+      <label>Numéro d’immatriculation</label>
       <value>EVTC001110001</value>
    </data>
    <data>
-      <property>Date d’inscription</property>
+      <label>Date d’inscription</label>
       <value>18/02/2014</value>
    </data>
    <data>
-      <property>Statut</property>
+      <label>Statut</label>
       <value>PERSONNE PHYSIQUE</value>
    </data>
    <data>
-      <property>Adresse</property>
+      <label>Adresse</label>
       <value>10 RUE DES ÉTANGS</value>
    </data>
    <data>
-      <property>Code Postal</property>
+      <label>Code Postal</label>
       <value>01800</value>
    </data>
    <data>
-      <property>Ville</property>
+      <label>Ville</label>
       <value>MEXIMIEUX</value>
    </data>
    <data>
-      <property>Pays</property>
+      <label>Pays</label>
       <value>FRANCE</value>
    </data>
 </root>
