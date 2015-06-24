@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+   <data>
+      <property>Fiche mise à jour le</property>
+      <value>26/02/2014</value>
+   </data>
+   <data>
+      <property>Nom</property>
+      <value>PHILIPPEAU</value>
+   </data>
+   <data>
+      <property>Prénom</property>
+      <value>EMMANUEL</value>
+   </data>
+   <data>
+      <property>Marque / Nom commercial</property>
+      <value>ROYALE ROUTE SERVICES</value>
+   </data>
+   <data>
+      <property>Numéro d’immatriculation</property>
+      <value>EVTC001110001</value>
+   </data>
+   <data>
+      <property>Date d’inscription</property>
+      <value>18/02/2014</value>
+   </data>
+   <data>
+      <property>Statut</property>
+      <value>PERSONNE PHYSIQUE</value>
+   </data>
+   <data>
+      <property>Adresse</property>
+      <value>10 RUE DES ÉTANGS</value>
+   </data>
+   <data>
+      <property>Code Postal</property>
+      <value>01800</value>
+   </data>
+   <data>
+      <property>Ville</property>
+      <value>MEXIMIEUX</value>
+   </data>
+   <data>
+      <property>Pays</property>
+      <value>FRANCE</value>
+   </data>
+</root>
