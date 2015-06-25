@@ -1,2 +1,5 @@
 extraction:
-	java net.sf.saxon.Transform -s:input.html -xsl:../transformation.xsl -o:output.xml && cat output.xml
+	./processOne.sh ./input.html ./output.xml && cat ./output.xml
+
+extractions:
+	./processAll.sh /media/webdav/vtc/licences/personne-physique/html /media/webdav/vtc/licences/personne-physique/xml/
