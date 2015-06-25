@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+   <label>personne morale</label>
+   <value>
+      <data>
+         <label>Fiche mise à jour le</label>
+         <value>17/05/2013</value>
+      </data>
+      <data>
+         <label>Informations sur l’exploitant</label>
+         <value>
+            <data>
+               <label>Dénomination</label>
+               <value>VIA CUNY</value>
+            </data>
+            <data>
+               <label>Sigle</label>
+               <value>-</value>
+            </data>
+            <data>
+               <label>Marque / Nom commercial</label>
+               <value>-</value>
+            </data>
+            <data>
+               <label>Numéro SIRET</label>
+               <value>48866890600024</value>
+            </data>
+            <data>
+               <label>Numéro d’immatriculation</label>
+               <value>EVTC001100001</value>
+            </data>
+            <data>
+               <label>Date d’inscription</label>
+               <value>17/05/2013</value>
+            </data>
+            <data>
+               <label>Statut</label>
+               <value>PERSONNE MORALE</value>
+            </data>
+         </value>
+      </data>
+      <data>
+         <label>Forme juridique</label>
+         <value>SARL</value>
+      </data>
+      <data>
+         <label>Représentants légaux/statutaires</label>
+         <value>
+            <data>
+               <label>Représentant principal</label>
+               <value>NICOLAS CUNY, GÉRANT</value>
+            </data>
+            <data>
+               <label>Autre(s) représentant(s)</label>
+               <value>Aucun autre représentant enregistré.</value>
+            </data>
+         </value>
+      </data>
+      <data>
+         <label>Lieu d’établissement</label>
+         <value>
+            <data>
+               <label>Adresse</label>
+               <value>1 RUE CHRISTIAN BIRKEN</value>
+            </data>
+            <data>
+               <label>Code Postal</label>
+               <value>01360</value>
+            </data>
+            <data>
+               <label>Ville</label>
+               <value>LOYETTES</value>
+            </data>
+            <data>
+               <label>Pays</label>
+               <value>FRANCE</value>
+            </data>
+         </value>
+      </data>
+   </value>
+</data>
