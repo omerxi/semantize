@@ -1,47 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<root>
-   <data>
-      <label>Fiche mise à jour le</label>
-      <value>26/02/2014</value>
-   </data>
-   <data>
-      <label>Nom</label>
-      <value>PHILIPPEAU</value>
-   </data>
-   <data>
-      <label>Prénom</label>
-      <value>EMMANUEL</value>
-   </data>
-   <data>
-      <label>Marque / Nom commercial</label>
-      <value>ROYALE ROUTE SERVICES</value>
-   </data>
-   <data>
-      <label>Numéro d’immatriculation</label>
-      <value>EVTC001110001</value>
-   </data>
-   <data>
-      <label>Date d’inscription</label>
-      <value>18/02/2014</value>
-   </data>
-   <data>
-      <label>Statut</label>
-      <value>PERSONNE PHYSIQUE</value>
-   </data>
-   <data>
-      <label>Adresse</label>
-      <value>10 RUE DES ÉTANGS</value>
-   </data>
-   <data>
-      <label>Code Postal</label>
-      <value>01800</value>
-   </data>
-   <data>
-      <label>Ville</label>
-      <value>MEXIMIEUX</value>
-   </data>
-   <data>
-      <label>Pays</label>
-      <value>FRANCE</value>
-   </data>
-</root>
+<data>
+   <label>personne morale</label>
+   <value>
+      <data>
+         <label>Fiche mise à jour le</label>
+         <value>26/02/2014</value>
+      </data>
+      <data>
+         <label>Informations sur l’exploitant</label>
+         <value>
+            <data>
+               <label>Nom</label>
+               <value>PHILIPPEAU</value>
+            </data>
+            <data>
+               <label>Prénom</label>
+               <value>EMMANUEL</value>
+            </data>
+            <data>
+               <label>Marque / Nom commercial</label>
+               <value>ROYALE ROUTE SERVICES</value>
+            </data>
+            <data>
+               <label>Numéro d’immatriculation</label>
+               <value>EVTC001110001</value>
+            </data>
+            <data>
+               <label>Date d’inscription</label>
+               <value>18/02/2014</value>
+            </data>
+            <data>
+               <label>Statut</label>
+               <value>PERSONNE PHYSIQUE</value>
+            </data>
+         </value>
+      </data>
+      <data>
+         <label>Lieu d’établissement</label>
+         <value>
+            <data>
+               <label>Adresse</label>
+               <value>10 RUE DES ÉTANGS</value>
+            </data>
+            <data>
+               <label>Code Postal</label>
+               <value>01800</value>
+            </data>
+            <data>
+               <label>Ville</label>
+               <value>MEXIMIEUX</value>
+            </data>
+            <data>
+               <label>Pays</label>
+               <value>FRANCE</value>
+            </data>
+         </value>
+      </data>
+   </value>
+</data>
