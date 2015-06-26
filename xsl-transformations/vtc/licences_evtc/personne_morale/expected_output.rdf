@@ -9,67 +9,67 @@
   xmlns:oxid="http://omerxi.com/resource/"
   xmlns:cob="http://cobusiness.fr/ontologies/barter.owl.n3#">
 
-  <rdf:Description rdf:about="http://omerxi.com/resource/driver0">
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_1">
     <rdf:type rdf:resource="http://omerxi.com/ontologies/core.owl.ttl#Ride-hailing-driver"/>
   </rdf:Description>
 
-  <rdf:Description rdf:about="http://omerxi.com/resource/driver0">
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_1">
     <oxi:status rdf:resource="http://fr.dbpedia.org/resource/Personne_morale"/>
   </rdf:Description>
 
-  <rdf:Description rdf:about="http://omerxi.com/resource/driver0">
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_1">
     <dc:date>17/05/2013</dc:date>
   </rdf:Description>
 
-  <rdf:Description rdf:about="http://omerxi.com/resource/driver0">
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_1">
     <foaf:name>VIA CUNY</foaf:name>
   </rdf:Description>
 
-  <rdf:Description rdf:about="http://omerxi.com/resource/driver0">
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_1">
     <oxi:initials>-</oxi:initials>
   </rdf:Description>
 
-  <rdf:Description rdf:about="http://omerxi.com/resource/driver0">
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_1">
     <oxi:brand>-</oxi:brand>
   </rdf:Description>
 
-  <rdf:Description rdf:about="http://omerxi.com/resource/driver0">
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_1">
     <cob:siren>48866890600024</cob:siren>
   </rdf:Description>
 
-  <rdf:Description rdf:about="http://omerxi.com/resource/driver0">
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_1">
     <oxi:id>EVTC001100001</oxi:id>
   </rdf:Description>
 
-  <rdf:Description rdf:about="http://omerxi.com/resource/driver0">
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_1">
     <oxi:join-date>17/05/2013</oxi:join-date>
   </rdf:Description>
 
-  <rdf:Description rdf:about="http://omerxi.com/resource/driver0">
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_1">
     <oxi:legal-form rdf:resource="http://fr.dbpedia.org/resource/SARL"/>
   </rdf:Description>
 
-  <rdf:Description rdf:about="http://omerxi.com/resource/driver0">
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_1">
     <oxi:manager>NICOLAS CUNY</oxi:manager>
   </rdf:Description>
 
-  <rdf:Description rdf:about="http://omerxi.com/resource/driver0">
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_1">
     <oxi:representative></oxi:representative>
   </rdf:Description>
 
-  <rdf:Description rdf:about="http://omerxi.com/resource/driver0">
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_1">
     <vcard:street-address>1 RUE CHRISTIAN BIRKEN</vcard:street-address>
   </rdf:Description>
 
-  <rdf:Description rdf:about="http://omerxi.com/resource/driver0">
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_1">
     <vcard:postal-code>01360</vcard:postal-code>
   </rdf:Description>
 
-  <rdf:Description rdf:about="http://omerxi.com/resource/driver0">
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_1">
     <vcard:locality>LOYETTES</vcard:locality>
   </rdf:Description>
 
-  <rdf:Description rdf:about="http://omerxi.com/resource/driver0">
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_1">
     <vcard:country-name>FRANCE</vcard:country-name>
   </rdf:Description>
 
