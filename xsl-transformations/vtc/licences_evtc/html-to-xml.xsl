@@ -1,9 +1,10 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:strip-space elements="*"/>
   <xsl:output indent="yes" method="xml"/>
+  <xsl:param name="label"/>
   <xsl:template match="/html">
     <data>
-      <label>personne morale</label>
+      <label><xsl:value-of select="$label" /></label>
       <value>
         <xsl:apply-templates select="body"/>
       </value>

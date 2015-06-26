@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:oxid="http://omerxi.com/resource/"
+         xmlns:cob="http://cobusiness.fr/ontologies/barter.owl.n3#"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns:oxi="http://omerxi.com/ontologies/core.owl.ttl#">
+   <rdf:Description rdf:about="http://omerxi.com/resource/driver">
+      <rdf:type rdf:resource="http://omerxi.com/ontologies/core.owl.ttl#Ride-hailing-driver"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://omerxi.com/resource/driver2">
+      <oxi:status rdf:resource="http://fr.dbpedia.org/resource/Personne_physique"/>
+   </rdf:Description>
+</rdf:RDF>
