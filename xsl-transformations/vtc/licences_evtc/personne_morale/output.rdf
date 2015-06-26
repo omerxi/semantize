@@ -16,12 +16,6 @@
       <foaf:name>VIA CUNY</foaf:name>
    </rdf:Description>
    <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_1">
-      <oxi:initials>-</oxi:initials>
-   </rdf:Description>
-   <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_1">
-      <oxi:brand>-</oxi:brand>
-   </rdf:Description>
-   <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_1">
       <cob:siren>48866890600024</cob:siren>
    </rdf:Description>
    <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_1">

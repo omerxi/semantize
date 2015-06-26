@@ -56,7 +56,7 @@
     <xsl:apply-templates/>
   </xsl:template>
 
-  <xsl:template match="data[label[text()='Marque / Nom commercial']]">
+  <xsl:template match="data[label[text()='Marque / Nom commercial'] and value[text() != '-']]">
     <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_{$ordinal}">
       <oxi:brand>
         <xsl:value-of select="./value"/>
@@ -135,7 +135,7 @@
     <xsl:apply-templates/>
   </xsl:template>
 
-  <xsl:template match="data[label[text()='Sigle']]">
+  <xsl:template match="data[label[text()='Sigle'] and value[text() != '-']]">
     <rdf:Description rdf:about="http://omerxi.com/resource/driver_corporation_{$ordinal}">
       <oxi:initials>
         <xsl:value-of select="./value"/>
