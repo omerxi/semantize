@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
+  xmlns:foaf="http://xmlns.com/foaf/0.1/"
+  xmlns:oxi="http://omerxi.com/ontologies/core.owl.ttl#"
+  xmlns:oxid="http://omerxi.com/resource/"
+  xmlns:cob="http://cobusiness.fr/ontologies/barter.owl.n3#">
+
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver2">
+    <rdf:type rdf:resource="http://omerxi.com/ontologies/core.owl.ttl#Ride-hailing-driver"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver2">
+    <oxi:status rdf:resource="http://fr.dbpedia.org/resource/Personne_physique"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver2">
+    <dc:date>26/02/2014</dc:date>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver2">
+    <foaf:lastName>PHILIPPEAU</foaf:lastName>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver2">
+    <foaf:firstName>EMMANUEL</foaf:firstName>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver2">
+    <oxi:brand>ROYALE ROUTE SERVICES</oxi:brand>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver2">
+    <oxi:id>EVTC001110001</oxi:id>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver2">
+    <oxi:join-date>18/02/2014</oxi:join-date>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver2">
+    <vcard:street-address>10 RUE DES ÉTANGS</vcard:street-address>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver2">
+    <vcard:postal-code>01800</vcard:postal-code>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver2">
+    <vcard:locality>MEXIMIEUX</vcard:locality>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://omerxi.com/resource/driver2">
+    <vcard:country-name>FRANCE</vcard:country-name>
+  </rdf:Description>
+
+</rdf:RDF>
