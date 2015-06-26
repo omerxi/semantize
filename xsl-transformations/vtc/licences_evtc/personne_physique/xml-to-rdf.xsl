@@ -15,7 +15,7 @@
 
   <xsl:template match="/data">
     <rdf:RDF>
-      <rdf:Description rdf:about="http://omerxi.com/resource/driver{$ordinal}">
+      <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_{$ordinal}">
         <rdf:type rdf:resource="http://omerxi.com/ontologies/core.owl.ttl#Ride-hailing-driver"/>
       </rdf:Description>
       <xsl:apply-templates/>
@@ -23,14 +23,14 @@
   </xsl:template>
 
   <xsl:template match="label[text()='personne physique']">
-    <rdf:Description rdf:about="http://omerxi.com/resource/driver{$ordinal}">
+    <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_{$ordinal}">
       <oxi:status rdf:resource="http://fr.dbpedia.org/resource/Personne_physique"/>
     </rdf:Description>
     <xsl:apply-templates/>
   </xsl:template>
 
   <xsl:template match="data[label[text()='Fiche mise à jour le']]">
-    <rdf:Description rdf:about="http://omerxi.com/resource/driver{$ordinal}">
+    <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_{$ordinal}">
       <dc:date>
         <xsl:value-of select="./value"/>
       </dc:date>
@@ -39,7 +39,7 @@
   </xsl:template>
 
   <xsl:template match="data[label[text()='Nom']]">
-    <rdf:Description rdf:about="http://omerxi.com/resource/driver{$ordinal}">
+    <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_{$ordinal}">
       <foaf:lastName>
         <xsl:value-of select="./value"/>
       </foaf:lastName>
@@ -48,7 +48,7 @@
   </xsl:template>
 
   <xsl:template match="data[label[text()='Prénom']]">
-    <rdf:Description rdf:about="http://omerxi.com/resource/driver{$ordinal}">
+    <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_{$ordinal}">
       <foaf:firstName>
         <xsl:value-of select="./value"/>
       </foaf:firstName>
@@ -57,7 +57,7 @@
   </xsl:template>
 
   <xsl:template match="data[label[text()='Marque / Nom commercial']]">
-    <rdf:Description rdf:about="http://omerxi.com/resource/driver{$ordinal}">
+    <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_{$ordinal}">
       <oxi:brand>
         <xsl:value-of select="./value"/>
       </oxi:brand>
@@ -66,7 +66,7 @@
   </xsl:template>
 
   <xsl:template match="data[label[text()='Numéro d’immatriculation']]">
-    <rdf:Description rdf:about="http://omerxi.com/resource/driver{$ordinal}">
+    <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_{$ordinal}">
       <oxi:id>
         <xsl:value-of select="./value"/>
       </oxi:id>
@@ -75,7 +75,7 @@
   </xsl:template>
 
   <xsl:template match="data[label[text()='Date d’inscription']]">
-    <rdf:Description rdf:about="http://omerxi.com/resource/driver{$ordinal}">
+    <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_{$ordinal}">
       <!-- could use dublin core ? -->
       <oxi:join-date>
         <xsl:value-of select="./value"/>
@@ -86,7 +86,7 @@
 
   <!-- TODO remove [1] restriction later on -->
   <xsl:template match="data[label[text()='Adresse']][1]">
-    <rdf:Description rdf:about="http://omerxi.com/resource/driver{$ordinal}">
+    <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_{$ordinal}">
       <vcard:street-address>
         <xsl:value-of select="./value"/>
       </vcard:street-address>
@@ -96,7 +96,7 @@
 
   <!-- TODO remove [1] restriction later on -->
   <xsl:template match="data[label[text()='Code Postal']][1]">
-    <rdf:Description rdf:about="http://omerxi.com/resource/driver{$ordinal}">
+    <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_{$ordinal}">
       <vcard:postal-code>
         <xsl:value-of select="./value"/>
       </vcard:postal-code>
@@ -106,7 +106,7 @@
 
   <!-- TODO remove [1] restriction later on -->
   <xsl:template match="data[label[text()='Ville']][1]">
-    <rdf:Description rdf:about="http://omerxi.com/resource/driver{$ordinal}">
+    <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_{$ordinal}">
       <vcard:locality>
         <xsl:value-of select="./value"/>
       </vcard:locality>
@@ -116,7 +116,7 @@
 
   <!-- TODO remove [1] restriction later on -->
   <xsl:template match="data[label[text()='Pays']][1]">
-    <rdf:Description rdf:about="http://omerxi.com/resource/driver{$ordinal}">
+    <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_{$ordinal}">
       <vcard:country-name>
         <xsl:value-of select="./value"/>
       </vcard:country-name>

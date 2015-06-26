@@ -6,40 +6,40 @@
          xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
          xmlns:foaf="http://xmlns.com/foaf/0.1/"
          xmlns:oxi="http://omerxi.com/ontologies/core.owl.ttl#">
-   <rdf:Description rdf:about="http://omerxi.com/resource/driver1">
+   <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_1">
       <rdf:type rdf:resource="http://omerxi.com/ontologies/core.owl.ttl#Ride-hailing-driver"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://omerxi.com/resource/driver1">
+   <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_1">
       <oxi:status rdf:resource="http://fr.dbpedia.org/resource/Personne_physique"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://omerxi.com/resource/driver1">
+   <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_1">
       <dc:date>26/02/2014</dc:date>
    </rdf:Description>
-   <rdf:Description rdf:about="http://omerxi.com/resource/driver1">
+   <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_1">
       <foaf:lastName>PHILIPPEAU</foaf:lastName>
    </rdf:Description>
-   <rdf:Description rdf:about="http://omerxi.com/resource/driver1">
+   <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_1">
       <foaf:firstName>EMMANUEL</foaf:firstName>
    </rdf:Description>
-   <rdf:Description rdf:about="http://omerxi.com/resource/driver1">
+   <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_1">
       <oxi:brand>ROYALE ROUTE SERVICES</oxi:brand>
    </rdf:Description>
-   <rdf:Description rdf:about="http://omerxi.com/resource/driver1">
+   <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_1">
       <oxi:id>EVTC001110001</oxi:id>
    </rdf:Description>
-   <rdf:Description rdf:about="http://omerxi.com/resource/driver1">
+   <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_1">
       <oxi:join-date>18/02/2014</oxi:join-date>
    </rdf:Description>
-   <rdf:Description rdf:about="http://omerxi.com/resource/driver1">
+   <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_1">
       <vcard:street-address>10 RUE DES ÉTANGS</vcard:street-address>
    </rdf:Description>
-   <rdf:Description rdf:about="http://omerxi.com/resource/driver1">
+   <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_1">
       <vcard:postal-code>01800</vcard:postal-code>
    </rdf:Description>
-   <rdf:Description rdf:about="http://omerxi.com/resource/driver1">
+   <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_1">
       <vcard:locality>MEXIMIEUX</vcard:locality>
    </rdf:Description>
-   <rdf:Description rdf:about="http://omerxi.com/resource/driver1">
+   <rdf:Description rdf:about="http://omerxi.com/resource/driver_individual_1">
       <vcard:country-name>FRANCE</vcard:country-name>
    </rdf:Description>
 </rdf:RDF>
